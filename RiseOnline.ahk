@@ -8,8 +8,8 @@
 ;  Version : 1.8
 ;  Date    : 19/01/2022
 ;
-;  Usage:  will be update this part later
-;	   after adding some more future.
+;  Usage:  1st] resolution 1680x1050 yapilacak
+;	   2nd] pencerinin uzerinden ekran fullscreen yapilacak, custom resolution olarak degisecektir daha sonra bu deger ayarlarda otomatik olarak.
 ;
 ; Added: v1.8 - 
 ;
