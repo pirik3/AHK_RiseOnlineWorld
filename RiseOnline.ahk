@@ -80,14 +80,14 @@ Loop
 
 AutoLoot()
 {
-  ControlSend,,{F Down}{F Up},AHK_exe RiseOnline-Win64-Shipping.exe
-  
-if (ok:=FindText(X, Y, 644, 344, 1314, 832, 0, 0, Drop))
+  ;~ ControlSend,,{F Down}{F Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  MouseGetPos, xpos, ypos ;kutu imlecin bulundugu yerde aciliyor, kutu tarama buna gore yapilacak.
+if (ok:=FindText(X, Y, xpos, ypos, xpos+300, ypos+200, 0, 0, Drop))
 {
-  ;MsgBox, 4096, Tip, % "Found:`t" Round(ok.Length())
-  ;. "`n`nTime:`t" (A_TickCount-t1) " ms"
-  ;. "`n`nPos:`t" X ", " Y
-  ;. "`n`nResult:`t<" (Comment:=ok[1].id) ">"
+  ;~ MsgBox, 4096, Tip, % "Found:`t" Round(ok.Length())
+  ;~ . "`n`nTime:`t" (A_TickCount-t1) " ms"
+  ;~ . "`n`nPos:`t" X ", " Y
+  ;~ . "`n`nResult:`t<" (Comment:=ok[1].id) ">"
   ;FindText().Click(X-30, Y+60, "R") ;1. slot
   ;FindText().Click(X+20, Y+60, "R") ;2. slot
   ;FindText().Click(X-30, Y+60, "R") ;3. slot
@@ -96,16 +96,11 @@ if (ok:=FindText(X, Y, 644, 344, 1314, 832, 0, 0, Drop))
   slot1y := Y+60
   slot2x := X+20
   slot2y := Y+60
-  slot3x := X-70
-  slot3y := Y+230
-  ;ControlClick, x%X-30% y%Y+60%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
+  slot3x := X+70
+  slot3y := Y+50
   ControlClick, x%slot1x% y%slot1y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ControlClick, x%slot2x% y%slot2y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
-  ;ControlClick, x%slot3x% y%slot3y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
-  ;991,582
-  ;962, 644
-  ;1013, 642
-  ;926, 812
+  ControlClick, x%slot3x% y%slot3y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
 }
 }
 
