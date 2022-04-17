@@ -80,7 +80,7 @@ Loop
 
 AutoLoot()
 {
-  ;~ ControlSend,,{F Down}{F Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  ControlSend,,{F Down}{F Up},AHK_exe RiseOnline-Win64-Shipping.exe
   MouseGetPos, xpos, ypos ;kutu imlecin bulundugu yerde aciliyor, kutu tarama buna gore yapilacak.
 if (ok:=FindText(X, Y, xpos, ypos, xpos+300, ypos+200, 0, 0, Drop))
 {
