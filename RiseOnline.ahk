@@ -39,7 +39,7 @@ CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Wi
 ;pToken := Gdip_Startup()
 t1:=A_TickCount, X:=Y:=""
 
-FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; put in auto-execute section at top of script
+FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; tray icon dosyasi. %temp% yazip, temp dosyasinin icinde bulabilirsiniz.
 Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
