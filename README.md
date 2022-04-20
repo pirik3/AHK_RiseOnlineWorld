@@ -9,6 +9,8 @@ Home -> Terminate Script
 
 2] Screen resolution is windowed 1600x900.
 
+3] Windows -> Dipslay Settings -> Scale and layout = %100
+
   -> Game Settings:
 
   -> Resolution must be 1600x900 / Windowed. Check pictures for other options.
