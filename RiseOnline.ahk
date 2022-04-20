@@ -319,7 +319,7 @@ Loop
   }
   Else
   {
-    MsgBox, 0, Uyari!, Rise Online acik degil, script kapatilacak.
+    MsgBox, 262192, Uyari!, Rise Online acik degil`, script kapatilacak.
     ExitApp
   }
 }
