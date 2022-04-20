@@ -7,11 +7,11 @@ Home -> Terminate Script
 
 1] Skill icons top bar of window.
 
-2] Screen resolution is windowed custom.
+2] Screen resolution is windowed 1600x900.
 
-Game Settings:
+  -> Game Settings:
 
-Resolution must be 1600x900 / Windowed. Check pictures for other options.
+  -> Resolution must be 1600x900 / Windowed. Check pictures for other options.
 
 ![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_opt_1.JPG?raw=true)
 ![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_opt_2.JPG?raw=true)
