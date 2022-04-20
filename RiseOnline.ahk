@@ -39,7 +39,8 @@ CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Wi
 ;pToken := Gdip_Startup()
 t1:=A_TickCount, X:=Y:=""
 
-Menu Tray, Icon, C:\Users\pirik3\Downloads\oh.ico
+FileInstall, C:\Users\pirik3\Downloads\oh.ico, oh.ico ; put in auto-execute section at top of script
+Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
 Gui Add, Button, hWndhBtnPauseRun vBtnPauseRun x232 y368 w164 h23, PAUSE / RUN
