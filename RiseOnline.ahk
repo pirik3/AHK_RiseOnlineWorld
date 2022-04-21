@@ -409,7 +409,6 @@ HPpot() ;tamam
   if (tv_get(R2C1C1, "Check")) and (hp90 != 0x565DE3) or (tv_get(R2C1C2, "Check")) and (hp80 != 0x5359E1) or (tv_get(R2C1C3, "Check")) and (hp70 != 0x535AE0) or (tv_get(R2C1C4, "Check")) and (hp50 != 0x5157DF) or (tv_get(R2C1C5, "Check")) and (hp30 != 0x5156DE)
   {
     ControlSend,,{1 Down}{1 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    Sleep, 1000
   }
 }
 
@@ -425,7 +424,6 @@ MPpot() ;tamam
   if (tv_get(R2C2C1, "Check")) and (mp90 != 0xD18A42) or (tv_get(R2C2C2, "Check")) and (mp80 != 0xCF8C43) or (tv_get(R2C2C3, "Check")) and (mp70 != 0xCE8941) or (tv_get(R2C2C4, "Check")) and (mp60 != 0xCF8D45) or (tv_get(R2C2C5, "Check")) and (mp50 != 0xCE8B43)
   {
     ControlSend,,{2 Down}{2 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    Sleep, 1000
   }
 }
 
