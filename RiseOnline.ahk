@@ -5,14 +5,15 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.8
+;  Version : 1.3
 ;  Date    : 19/01/2022
 ;
 ;  Usage:  1600x900
 ;          Check folder images for more settings in game.
 ;
 ;  Added: 
-;   ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
+;   1.2] ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
+;   1.3] Mp/HP eklendi.
 ;
 ;===========================================
 ;*/
@@ -39,7 +40,8 @@ CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Wi
 ;pToken := Gdip_Startup()
 t1:=A_TickCount, X:=Y:=""
 
-FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; tray icon dosyasi. %temp% yazip, temp dosyasinin icinde bulabilirsiniz.
+
+FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; put in auto-execute section at top of script
 Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
@@ -49,7 +51,7 @@ Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordi
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
 Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23, OKU
 Gui Add, TreeView, x2 y3 w228 h391 -ReadOnly AltSubmit Checked
-Gui Add, Tab3, x232 y8 w167 h305, Genel|Atak|Rogue|Priest|Warr.|Mage|LOG|PK
+;~ Gui Add, Tab3, x232 y8 w167 h305, Genel|Atak|Rogue|Priest|Warr.|Mage|LOG|PK
 Gui Tab, 1
 Gui Add, Text, x240 y72 w50 h23 +0x200, HP pot >
 Gui Add, Hotkey, hWndhHk5 vHk x296 y72 w18 h23, F1
@@ -197,23 +199,23 @@ Gui Show, w402 h397, ROW Yardimci
 ;{ ===================TreeView====Inner=Text==========================================;
 global R1 := TV_Add("Ustte tut." , R1)
 global R2 := TV_Add("Genel." , R2) 
-global R2C1 := TV_Add("HP doldur." , R2)  
+global R2C1 := TV_Add("HP doldur. KEY [1]" , R2)  
 global R2C1C1 := TV_Add("HP pot/minor/heal %90.",R2C1) 
 global R2C1C2 := TV_Add("HP pot/minor/heal %80.", R2C1)
 global R2C1C3 := TV_Add("HP pot/minor/heal %70.", R2C1)
-global R2C1C4 := TV_Add("HP pot/minor/heal %60.", R2C1)
-global R2C1C5 := TV_Add("HP pot/minor/heal %50.", R2C1)
-global R2C2 := TV_Add("MP doldur.", R2)
+global R2C1C4 := TV_Add("HP pot/minor/heal %50.", R2C1)
+global R2C1C5 := TV_Add("HP pot/minor/heal %30.", R2C1)
+global R2C2 := TV_Add("MP doldur. KEY[2]", R2)
 global R2C2C1 := TV_Add("MP pot %90.", R2C2)
 global R2C2C2 := TV_Add("MP pot %80.", R2C2)
 global R2C2C3 := TV_Add("MP pot %70.", R2C2)
 global R2C2C4 := TV_Add("MP pot %60.", R2C2)
 global R2C2C5 := TV_Add("MP pot %50.", R2C2)
 ;~ global R2C3 := TV_Add("Koordinat degisirse Script durdur/kapat.", R2)
-global R2C4 := TV_Add("Partiden cikarsam?.", R2)
+;~ global R2C4 := TV_Add("Partiden cikarsam?.", R2)
 ;~ global R2C4C1 := TV_Add("Chat 'e '/Town' yazarak town at.", R2C4)
-global R2C4C2 := TV_Add("'Gate Skill' ile town at.", R2C4)
-global R2C4C3 := TV_Add("'Mouse click' ile town at.", R2C4)
+;~ global R2C4C2 := TV_Add("'Gate Skill' ile town at.", R2C4)
+;~ global R2C4C3 := TV_Add("'Mouse click' ile town at.", R2C4)
 global R2C5 := TV_Add("OTO Loot.", R2)
 ;~ global R2C5C1 := TV_Add("Yaprak.", R2C5)
 ;~ global R2C5C1C1 := TV_Add("Feed %70.", R2C5C1)
@@ -237,23 +239,23 @@ global R2C5 := TV_Add("OTO Loot.", R2)
 ;~ global R2C8C1 := TV_Add("Forgotten Temple.", R2C8)
 ;~ global R2C8C2 := TV_Add("Juraid Mountain.", R2C8)
 ;~ global R2C8C3 := TV_Add("Border Def. War.", R2C8)
-global R3 := TV_Add("Rogue.", R3)
-global R3C1 := TV_Add("Wolf kullan.", R3)
-global R3C2 := TV_Add("Light Feet kullan.", R3)
-global R3C3 := TV_Add("Swift kullan.", R3)
-global R3C4 := TV_Add("AC-1.", R3)
-global R3C5 := TV_Add("AC-2.", R3)
-global R3C6 := TV_Add("AC-3.", R3)
-global R3C7 := TV_Add("Cure kullan.", R3)
-global R3C8 := TV_Add("Minor kullan.[% lik ayarini GENEL 'den seciniz.]", R3)
-global R4 := TV_Add("Priest.", R4)
-global R4C1 := TV_Add("Kitap kullan.", R4)
-global R4C2 := TV_Add("STR 15.", R4)
-global R4C3 := TV_Add("STR 30.", R4)
-global R4C4 := TV_Add("Buff kullan.", R4)
-global R4C5 := TV_Add("AC kullan.", R4)
-global R4C6 := TV_Add("Fresh kullan.", R4)
-global R4C6 := TV_Add("Cure kullan.", R4)
+;~ global R3 := TV_Add("Rogue.", R3)
+;~ global R3C1 := TV_Add("Wolf kullan.", R3)
+;~ global R3C2 := TV_Add("Light Feet kullan.", R3)
+;~ global R3C3 := TV_Add("Swift kullan.", R3)
+;~ global R3C4 := TV_Add("AC-1.", R3)
+;~ global R3C5 := TV_Add("AC-2.", R3)
+;~ global R3C6 := TV_Add("AC-3.", R3)
+;~ global R3C7 := TV_Add("Cure kullan.", R3)
+;~ global R3C8 := TV_Add("Minor kullan.[% lik ayarini GENEL 'den seciniz.]", R3)
+;~ global R4 := TV_Add("Priest.", R4)
+;~ global R4C1 := TV_Add("Kitap kullan.", R4)
+;~ global R4C2 := TV_Add("STR 15.", R4)
+;~ global R4C3 := TV_Add("STR 30.", R4)
+;~ global R4C4 := TV_Add("Buff kullan.", R4)
+;~ global R4C5 := TV_Add("AC kullan.", R4)
+;~ global R4C6 := TV_Add("Fresh kullan.", R4)
+;~ global R4C6 := TV_Add("Cure kullan.", R4)
 global R5 := TV_Add("Mage.", R5)
 global R6 := TV_Add("Warrior.", R6)
 global R7 := TV_Add("Atak.", R7)
@@ -271,14 +273,14 @@ global R7C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre
 ;~ global R7C8C1 := TV_Add("Paramun.", R7C8)
 ;~ global R7C8C1 := TV_Add("Shadow Seeker.", R7C8)
 ;~ global R7C8C1 := TV_Add("Ape.", R7C8)
-global R8 := TV_Add("PK.", R8)
-global R8C1 := TV_Add("Kalkan tak, 1.slot -> hotkey ile.", R8)
+;~ global R8 := TV_Add("PK.", R8)
+;~ global R8C1 := TV_Add("Kalkan tak, 1.slot -> hotkey ile.", R8)
 ;~ global R8C2 := TV_Add("Slide at -> hotkey ile.", R8)
-global R8C3 := TV_Add("Combo yap, butun classlar icin -> hotkey ile.", R8)
+;~ global R8C3 := TV_Add("Combo yap, butun classlar icin -> hotkey ile.", R8)
 ;~ global R8C4 := TV_Add("Descent at ve yere vur x3 -> hotkey ile.", R8)
 ;~ global R8C5 := TV_Add("Yere vur, x4 skill -> hotkey ile.", R8)
-global R8C6 := TV_Add("Kilic bas.", R8)
-global R8C7 := TV_Add("Frenzy bas.", R8)
+;~ global R8C6 := TV_Add("Kilic bas.", R8)
+;~ global R8C7 := TV_Add("Frenzy bas.", R8)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
@@ -300,6 +302,8 @@ global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
+MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istedikelrinizi secin`, ESC ile baslatin., 3
+
 Pause
 
 Loop
@@ -315,6 +319,8 @@ Loop
     UstteTut()
     AutoLoot()
     attack()
+    HPpot()
+    MPpot()
     ;============================
   }
   Else
@@ -394,15 +400,16 @@ if (ok:=FindText(X, Y, xpos, ypos, xpos+300, ypos+200, 0, 0, drop4))
 HPpot() ;tamam
 {
   ;CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Window|Client]
-  PixelGetColor, hp90,  211,  62
-  PixelGetColor, hp80,  182,  62
-  PixelGetColor, hp70,  163,  62
-  PixelGetColor, hp50,  209, 105
-  PixelGetColor, hp30,  146, 105
-  ;ToolTip, %hp30%
-  if(hp50 != 0x535AE2) ; HP
+  PixelGetColor, hp90, 252, 94 ; 0x565DE3
+  PixelGetColor, hp80, 232, 94 ; 0x5359E1
+  PixelGetColor, hp70, 210, 94 ; 0x535AE0
+  PixelGetColor, hp50, 170, 94 ; 0x5157DF
+  PixelGetColor, hp30, 130, 94 ; 0x5156DE
+  ;ToolTip, %hp90%
+  if (tv_get(R2C1C1, "Check")) and (hp90 != 0x565DE3) or (tv_get(R2C1C2, "Check")) and (hp80 != 0x5359E1) or (tv_get(R2C1C3, "Check")) and (hp70 != 0x535AE0) or (tv_get(R2C1C4, "Check")) and (hp50 != 0x5157DF) or (tv_get(R2C1C5, "Check")) and (hp30 != 0x5156DE)
   {
     ControlSend,,{1 Down}{1 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, 1000
   }
 }
 
@@ -410,15 +417,15 @@ HPpot() ;tamam
 MPpot() ;tamam
 {
   ;CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Window|Client]
-  PixelGetColor, mp90,  32, 348
-  PixelGetColor, mp80,  182,  79
-  PixelGetColor, mp70,  163,  79
-  PixelGetColor, mp60,  144,  79
-  PixelGetColor, mp50,  196, 128
-  PixelGetColor, mp16950,  165, 117
-  if(mp50 != 0xD48F46)
+  PixelGetColor, mp90, 252, 113 ; 0xD18A42
+  PixelGetColor, mp80, 230, 113 ; 0xCF8C43
+  PixelGetColor, mp70, 216, 113 ; 0xCE8941
+  PixelGetColor, mp60, 200, 113 ; 0xCF8D45
+  PixelGetColor, mp50, 170, 113 ; 0xCE8B43
+  if (tv_get(R2C2C1, "Check")) and (mp90 != 0xD18A42) or (tv_get(R2C2C2, "Check")) and (mp80 != 0xCF8C43) or (tv_get(R2C2C3, "Check")) and (mp70 != 0xCE8941) or (tv_get(R2C2C4, "Check")) and (mp60 != 0xCF8D45) or (tv_get(R2C2C5, "Check")) and (mp50 != 0xCE8B43)
   {
     ControlSend,,{2 Down}{2 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, 1000
   }
 }
 
