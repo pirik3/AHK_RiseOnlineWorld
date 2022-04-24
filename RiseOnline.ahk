@@ -5,7 +5,7 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.3
+;  Version : 1.4
 ;  Date    : 24/04/2022
 ;
 ;  Usage:  1600x900
