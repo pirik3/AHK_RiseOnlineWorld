@@ -1,10 +1,16 @@
 # AHK_RiseOnlineWorld
 RiseOnline macro
 
-ESC -> Start/Stop Script
+ESC -> Script'i Durdur/Baslat
 
-Home -> Terminate Script
+Home -> Script'i Kapat.
 
+[Usage/Tips]
+1] HP ve MP okumasi icin once buton ile HP/MP okutunuz, daha sonra treeview den %'lik seciminizi yapiniz.
+2] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun        oldugunca az saniye kullanin.
+3] Oto loot kutuya yakinken calisir.
+
+[Setting]
 1] Skill icons top bar of window.
 
 2] Screen resolution is windowed 1600x900.
