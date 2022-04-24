@@ -14,6 +14,7 @@ Home -> Script'i Kapat.
 3] Oto loot kutuya yakinken calisir.
 
 [Setting]
+
 1] Skill icons top bar of window.
 
 2] Screen resolution is windowed 1600x900.
