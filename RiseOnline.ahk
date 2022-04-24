@@ -381,28 +381,6 @@ Mob_Al() ;tamam
   return  
 }
 
-Pause_Run() ;tamam
-{
-  ButtonPauserun:
-  ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
-  ;~ IfMsgBox, Yes
-    WinActivate, Rise Online Client
-    WinMove, Rise Online Client,, 0, 0, 1600, 900
-    CoordMode Pixel, Window
-	WinGetPos, X, Y, W, H, Rise Online Client
-    mob1 := Gdip_BitmapFromScreen(794 . "|" . 37 . "|" . 6 . "|" . 10)
-    Gdip_SaveBitmapToFile(mob1, "Rise_Mob1.jpg")
-    ;GuiControl,,  pic2 , Mob1.jpg
-  ;~ MSGBox, 4, , 2. mob varmi,? Varsa Z 'ye aliniz, sonra YES tusuna basiniz.
-  ;~ IfMsgBox, Yes
-    ;~ WinGetPos, X, Y, W, H, Rise Online Client
-    ;~ mob2 := Gdip_BitmapFromScreen(624 . "|" . 44 . "|" . 52 . "|" . 56)
-    ;~ Gdip_SaveBitmapToFile(mob2, "Rise_Mob2.jpg")
-return
-}
-
-
-
 AutoLoot()
 {
   if (tv_get(R2C5, "Check"))
