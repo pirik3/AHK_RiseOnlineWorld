@@ -46,8 +46,8 @@ pToken := Gdip_Startup()
 ;~ Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
-Gui Add, Button, hWndhBtnPauseRun vBtnPauseRun x232 y368 w164 h23, PAUSE / RUN
-Gui Add, Button, hWndhBtnMobAl2 vBtnMobAl2 x312 y336 w80 h23, Mob AL
+;~ Gui Add, Button, hWndhBtnPauserun vBtnPauserun x232 y368 w164 h23, PAUuSE / RuUN
+Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23, Mob AL
 Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordinat Al
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
 Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23, OKU
@@ -225,7 +225,7 @@ global R2C2C5 := TV_Add("MP pot %50.", R2C2)
 ;~ global R2C4C1 := TV_Add("Chat 'e '/Town' yazarak town at.", R2C4)
 ;~ global R2C4C2 := TV_Add("'Gate Skill' ile town at.", R2C4)
 ;~ global R2C4C3 := TV_Add("'Mouse click' ile town at.", R2C4)
-global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisniz.]", R2)
+global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisiniz.]", R2)
 ;~ global R2C5C1 := TV_Add("Yaprak.", R2C5)
 ;~ global R2C5C1C1 := TV_Add("Feed %70.", R2C5C1)
 ;~ global R2C5C1C2 := TV_Add("Feed %50.", R2C5C1)
@@ -267,7 +267,7 @@ global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisniz.]", R2)
 ;~ global R4C6 := TV_Add("Cure kullan.", R4)
 ;~ global R5 := TV_Add("Archer.", R5)
 ;~ global R6 := TV_Add("Warrior.", R6)
-global R7 := TV_Add("Atak.[Zamanli skiler diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
+global R7 := TV_Add("Atak.[Zamanli skiller diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
 global R7C1 := TV_Add("Atak KEY [Z].", R7)
 global R7C2 := TV_Add("Atak > [7] > [Rr].", R7)
 global R7C3 := TV_Add("Atak > [1].", R7)
@@ -301,7 +301,7 @@ global R9C7 := TV_Add("Atak KEY [7].", R9)
 global R9C8 := TV_Add("Atak KEY [8].", R9)
 global R9C9 := TV_Add("Atak KEY [9].", R9)
 global R9C10 := TV_Add("Atak KEY [0].", R9)
-global R9C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
+;~ global R9C11 := TV_Add("Mob sec. / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
@@ -323,7 +323,7 @@ global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
-MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istedikelrinizi secin`, ESC ile baslatin., 3
+MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin., 3
 
 Pause
 
@@ -379,6 +379,26 @@ Mob_Al() ;tamam
     ;~ mob2 := Gdip_BitmapFromScreen(624 . "|" . 44 . "|" . 52 . "|" . 56)
     ;~ Gdip_SaveBitmapToFile(mob2, "Rise_Mob2.jpg")
   return  
+}
+
+Pause_Run() ;tamam
+{
+  ButtonPauserun:
+  ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
+  ;~ IfMsgBox, Yes
+    WinActivate, Rise Online Client
+    WinMove, Rise Online Client,, 0, 0, 1600, 900
+    CoordMode Pixel, Window
+	WinGetPos, X, Y, W, H, Rise Online Client
+    mob1 := Gdip_BitmapFromScreen(794 . "|" . 37 . "|" . 6 . "|" . 10)
+    Gdip_SaveBitmapToFile(mob1, "Rise_Mob1.jpg")
+    ;GuiControl,,  pic2 , Mob1.jpg
+  ;~ MSGBox, 4, , 2. mob varmi,? Varsa Z 'ye aliniz, sonra YES tusuna basiniz.
+  ;~ IfMsgBox, Yes
+    ;~ WinGetPos, X, Y, W, H, Rise Online Client
+    ;~ mob2 := Gdip_BitmapFromScreen(624 . "|" . 44 . "|" . 52 . "|" . 56)
+    ;~ Gdip_SaveBitmapToFile(mob2, "Rise_Mob2.jpg")
+return
 }
 
 
