@@ -372,13 +372,12 @@ HP_MP_renk_oku() ;tamam
   renkal:
   ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
   ;~ IfMsgBox, Yes
-  Process, Exist, RiseOnline-Win64-Shipping.exe
-  if errorlevel
+  ;~ Process, Exist, RiseOnline-Win64-Shipping.exe
+  WinActivate, Rise Online Client
+  IfWinActive, Rise Online Client
   {
-    WinActivate, Rise Online Client
     WinMove, Rise Online Client,, 0, 0, 1600, 900
     CoordMode Pixel, Window
-	WinGetPos, X, Y, W, H, Rise Online Client
     ;=========HP===================================
     PixelGetColor, hp90_passive, 252, 94 ; 0x565DE3
     PixelGetColor, hp80_passive, 232, 94 ; 0x5359E1
@@ -395,7 +394,7 @@ HP_MP_renk_oku() ;tamam
   }
   else
   {
-    MsgBox, 262192, Uyari!, Rise Online acik degil`, HP/MP pixelleri okunmadi.
+    MsgBox, 262192, Uyari!, Rise Online Pencerisi one alinamadi, HP/MP pixelleri okunmadi.
   }
   return  
 }
