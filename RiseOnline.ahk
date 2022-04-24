@@ -6,7 +6,7 @@
 ;
 ;  Author  : pirik3
 ;  Version : 1.3
-;  Date    : 19/01/2022
+;  Date    : 24/04/2022
 ;
 ;  Usage:  1600x900
 ;          Check folder images for more settings in game.
@@ -14,6 +14,7 @@
 ;  Added: 
 ;   1.2] ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
 ;   1.3] Mp/HP eklendi.
+;   1.4] Zamanli skiler eklendi.
 ;
 ;===========================================
 ;*/
@@ -39,10 +40,10 @@ CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Wi
 ;SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 ;pToken := Gdip_Startup()
 t1:=A_TickCount, X:=Y:=""
+pToken := Gdip_Startup()
 
-
-FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; put in auto-execute section at top of script
-Menu Tray, Icon, oh.ico
+;~ FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; put in auto-execute section at top of script
+;~ Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
 Gui Add, Button, hWndhBtnPauseRun vBtnPauseRun x232 y368 w164 h23, PAUSE / RUN
@@ -51,8 +52,8 @@ Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordi
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
 Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23, OKU
 Gui Add, TreeView, x2 y3 w228 h391 -ReadOnly AltSubmit Checked
-;~ Gui Add, Tab3, x232 y8 w167 h305, Genel|Atak|Rogue|Priest|Warr.|Mage|LOG|PK
-Gui Tab, 1
+Gui Add, Tab3, x232 y8 w167 h305, Atak| ;Genel|Rogue|Priest|Warr.|Mage|LOG|PK
+Gui Tab, 2
 Gui Add, Text, x240 y72 w50 h23 +0x200, HP pot >
 Gui Add, Hotkey, hWndhHk5 vHk x296 y72 w18 h23, F1
 global Hk
@@ -81,7 +82,7 @@ global Hk6
 ;~ Gui Add, Text, x360 y120 w9 h23 +0x200, +
 ;~ Gui Add, Text, x360 y144 w9 h23 +0x200, +
 ;~ Gui Add, Text, x320 y168 w9 h23 +0x200, +
-Gui Tab, 2
+Gui Tab, 1
 Gui Add, Text, x240 y104 w19 h23 +0x200, 1 >
 Gui Add, Text, x240 y128 w19 h23 +0x200, 2 >
 Gui Add, Text, x240 y152 w19 h23 +0x200, 3 >
@@ -102,8 +103,11 @@ global Hk14
 Gui Add, Hotkey, hWndhHk15 vHk15 x304 y128 w18 h23, 4
 global Hk15
 Gui Add, Hotkey, hWndhHk16 vHk16 x304 y152 w18 h23, 5
+global Hk16
 Gui Add, Hotkey, hWndhHk17 vHk17 x304 y176 w18 h23, 6
+global Hk17
 Gui Add, Hotkey, hWndhHk18 vHk18 x304 y200 w18 h23, 7
+global Hk18
 Gui Add, Edit, x344 y104 w48 h21 vhk14sleep, 1001
 global hk14sleep
 Gui Add, Text, x328 y104 w9 h23 +0x200, +
@@ -113,21 +117,26 @@ Gui Add, Text, x328 y176 w9 h23 +0x200, +
 Gui Add, Text, x328 y200 w9 h23 +0x200, +
 Gui Add, Edit, x344 y128 w48 h21 vhk15sleep, 1002
 global hk15sleep
-Gui Add, Edit, x344 y152 w48 h21, 3000
-Gui Add, Edit, x344 y176 w48 h21, 2000
-Gui Add, Edit, x344 y200 w48 h21, 1000
+Gui Add, Edit, x344 y152 w48 h21 vhk16sleep, 3001
+global hk16sleep
+Gui Add, Edit, x344 y176 w48 h21 vhk17sleep, 2000
+global hk17sleep
+Gui Add, Edit, x344 y200 w48 h21 vhk18sleep, 1009
+global hk18sleep
 Gui Add, Text, x288 y72 w102 h23 +0x200, Zaman(1sn = 1000)
 Gui Add, Text, x240 y224 w19 h23 +0x200, 6 >
 Gui Add, Text, x240 y248 w19 h23 +0x200, 7 >
 Gui Add, Hotkey, hWndhHk19 vHk19 x264 y224 w18 h23, f1
 Gui Add, Hotkey, hWndhHk20 vHk20 x304 y224 w18 h23, 8
-Gui Add, Edit, x344 y224 w48 h21, 1000
+global Hk20
+Gui Add, Edit, x344 y224 w48 h21 vhk20sleep, 1008
+global hk20sleep
 Gui Add, Text, x328 y224 w9 h23 +0x200, +
 Gui Add, Text, x288 y224 w9 h23 +0x200, +
-Gui Add, Edit, x264 y248 w58 h21 vhkRr, Rr
-global hkRr
+Gui Add, Hotkey, hWndhHkRr vHkRr x304 y248 w18 h23, R
+global HkRr
 Gui Add, Text, x328 y248 w9 h23 +0x200, +
-Gui Add, Edit, x344 y248 w48 h21 vhkRrsleep, 1000
+Gui Add, Edit, x344 y248 w48 h21 vhkRrsleep, 1007
 global hkRrsleep
 Gui Add, DropDownList, x240 y272 w150, Archer > 3-5 combo|Priest > [pasif]|
 Gui Tab, 3
@@ -216,7 +225,7 @@ global R2C2C5 := TV_Add("MP pot %50.", R2C2)
 ;~ global R2C4C1 := TV_Add("Chat 'e '/Town' yazarak town at.", R2C4)
 ;~ global R2C4C2 := TV_Add("'Gate Skill' ile town at.", R2C4)
 ;~ global R2C4C3 := TV_Add("'Mouse click' ile town at.", R2C4)
-global R2C5 := TV_Add("OTO Loot.", R2)
+global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisniz.]", R2)
 ;~ global R2C5C1 := TV_Add("Yaprak.", R2C5)
 ;~ global R2C5C1C1 := TV_Add("Feed %70.", R2C5C1)
 ;~ global R2C5C1C2 := TV_Add("Feed %50.", R2C5C1)
@@ -256,20 +265,20 @@ global R2C5 := TV_Add("OTO Loot.", R2)
 ;~ global R4C5 := TV_Add("AC kullan.", R4)
 ;~ global R4C6 := TV_Add("Fresh kullan.", R4)
 ;~ global R4C6 := TV_Add("Cure kullan.", R4)
-global R5 := TV_Add("Mage.", R5)
-global R6 := TV_Add("Warrior.", R6)
-global R7 := TV_Add("Atak.", R7)
+;~ global R5 := TV_Add("Archer.", R5)
+;~ global R6 := TV_Add("Warrior.", R6)
+global R7 := TV_Add("Atak.[Zamanli skiler diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
 global R7C1 := TV_Add("Atak KEY [Z].", R7)
-global R7C2 := TV_Add("Atak KEY [Rr].", R7)
-global R7C3 := TV_Add("Atak KEY [3].", R7)
-global R7C4 := TV_Add("Atak KEY [4].", R7)
-global R7C5 := TV_Add("Atak KEY [5].", R7)
-global R7C6 := TV_Add("Atak KEY [6].", R7)
-global R7C7 := TV_Add("Atak KEY [7].", R7)
-global R7C8 := TV_Add("Atak KEY [8].", R7)
+global R7C2 := TV_Add("Atak > [7] > [Rr].", R7)
+global R7C3 := TV_Add("Atak > [1].", R7)
+global R7C4 := TV_Add("Atak > [2].", R7)
+global R7C5 := TV_Add("Atak > [3].", R7)
+global R7C6 := TV_Add("Atak > [4].", R7)
+global R7C7 := TV_Add("Atak > [5].", R7)
+global R7C8 := TV_Add("Atak > [6].", R7)
 global R7C9 := TV_Add("Atak KEY [9].", R7)
 global R7C10 := TV_Add("Atak KEY [0].", R7)
-global R7C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre Disi]", R7)
+;~ global R7C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre Disi]", R7)
 ;~ global R7C8C1 := TV_Add("Paramun.", R7C8)
 ;~ global R7C8C1 := TV_Add("Shadow Seeker.", R7C8)
 ;~ global R7C8C1 := TV_Add("Ape.", R7C8)
@@ -281,6 +290,18 @@ global R7C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre
 ;~ global R8C5 := TV_Add("Yere vur, x4 skill -> hotkey ile.", R8)
 ;~ global R8C6 := TV_Add("Kilic bas.", R8)
 ;~ global R8C7 := TV_Add("Frenzy bas.", R8)
+global R9 := TV_Add("Mob_Atak. [Deneme asamasinda...]", R9)
+global R9C1 := TV_Add("Atak KEY [Z].", R9)
+global R9C2 := TV_Add("Atak KEY [Rr].", R9)
+global R9C3 := TV_Add("Atak KEY [3].", R9)
+global R9C4 := TV_Add("Atak KEY [4].", R9)
+global R9C5 := TV_Add("Atak KEY [5].", R9)
+global R9C6 := TV_Add("Atak KEY [6].", R9)
+global R9C7 := TV_Add("Atak KEY [7].", R9)
+global R9C8 := TV_Add("Atak KEY [8].", R9)
+global R9C9 := TV_Add("Atak KEY [9].", R9)
+global R9C10 := TV_Add("Atak KEY [0].", R9)
+global R9C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
@@ -309,7 +330,7 @@ Pause
 Loop
 {
   Gui, Submit, NoHide
-
+  CoordMode Pixel, Window
   WinActivate, AHK_exe RiseOnline-Win64-Shipping.exe
   WinMove, Rise Online Client,, 0, 0, 1600, 900
   Process, Exist, RiseOnline-Win64-Shipping.exe
@@ -319,6 +340,7 @@ Loop
     UstteTut()
     AutoLoot()
     attack()
+    Mobattack()
     HPpot()
     MPpot()
     ;============================
@@ -345,8 +367,10 @@ Mob_Al() ;tamam
   ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
   ;~ IfMsgBox, Yes
     WinActivate, Rise Online Client
+    WinMove, Rise Online Client,, 0, 0, 1600, 900
+    CoordMode Pixel, Window
 	WinGetPos, X, Y, W, H, Rise Online Client
-    mob1 := Gdip_BitmapFromScreen(X+837 . "|" . Y+43 . "|" . 8 . "|" . 9)
+    mob1 := Gdip_BitmapFromScreen(794 . "|" . 37 . "|" . 6 . "|" . 10)
     Gdip_SaveBitmapToFile(mob1, "Rise_Mob1.jpg")
     ;GuiControl,,  pic2 , Mob1.jpg
   ;~ MSGBox, 4, , 2. mob varmi,? Varsa Z 'ye aliniz, sonra YES tusuna basiniz.
@@ -427,43 +451,111 @@ MPpot() ;tamam
   }
 }
 
-attack()
+Mobattack()
 {
+  
 	;~ WinGetPos, X, Y, W, H, Rise Online Client
-    ;~ CoordMode, Pixel, Screen
-    ;~ ImageSearch, OutputVarX, OutputVarY, 827, 36, 853, 60, *80 %A_ScriptDir%\Rise_Mob1.jpg
-    ;~ if ErrorLevel=0
-    if (tv_get(R7C1, "Check"))
+    if (tv_get(R9C1, "Check"))
     {
       ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-	if (tv_get(R7C2, "Check"))
+    } 
+    
+    CoordMode, Pixel, Window
+    ImageSearch, X, Y, 783, 29, 809, 55, *90 Rise_Mob1.jpg
+    if (ErrorLevel=0)
+    {
+      ;~ ToolTip, bulundu %OutputVarX% %OutputVarY%
+      ;~ MouseMove, %OutputVarX%, %OutputVarY%
+      SplashTextOff 
+      ;~ FindText().MouseTip(ok[i].X, ok[i].Y)
+      
+	if (tv_get(R9C2, "Check"))
     {
       ControlSend,,{r Down}{r Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C3, "Check"))
+    if (tv_get(R9C3, "Check"))
     {
       ControlSend,,{3 Down}{3 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C4, "Check"))
+    if (tv_get(R9C4, "Check"))
     {
       ControlSend,,{4 Down}{4 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C5, "Check"))
+    if (tv_get(R9C5, "Check"))
     {
       ControlSend,,{5 Down}{5 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C6, "Check"))
+    if (tv_get(R9C6, "Check"))
     {
       ControlSend,,{6 Down}{6 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C7, "Check"))
+    if (tv_get(R9C7, "Check"))
     {
       ControlSend,,{7 Down}{7 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
-    if (tv_get(R7C8, "Check"))
+    if (tv_get(R9C8, "Check"))
     {
       ControlSend,,{8 Down}{8 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    }
+    if (tv_get(R9C9, "Check"))
+    {
+      ControlSend,,{9 Down}{9 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    }
+    if (tv_get(R9C10, "Check"))
+    {
+      ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    }
+  }
+  else
+    {
+      ;~ SplashTextOn, 300, 0, Rise_Mob1.jpg bulunamadi.
+      ;~ Sleep, 3000
+      ;~ SplashTextOff      
+      ;~ Pause
+    }
+}
+
+attack()
+{
+    if (tv_get(R7C1, "Check"))
+    {
+      ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, 100
+    } 
+	if (tv_get(R7C2, "Check"))
+    {
+      ControlSend,,{%hkRr% Down}{%hkRr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hkRrsleep%
+    }
+    if (tv_get(R7C3, "Check"))
+    {
+      ControlSend,,{%hk14% Down}{%hk14% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk14sleep%
+    }
+    if (tv_get(R7C4, "Check"))
+    {
+      ControlSend,,{%hk15% Down}{%hk15% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk15sleep%
+    }
+    if (tv_get(R7C5, "Check"))
+    {
+      ControlSend,,{%hk16% Down}{%hk16% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk16sleep%
+    }
+    if (tv_get(R7C6, "Check"))
+    {
+      ControlSend,,{%hk17% Down}{%hk17% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk17sleep%
+    }
+    if (tv_get(R7C7, "Check"))
+    {
+      ControlSend,,{%hk18% Down}{%hk18% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk18sleep%    
+    }
+    if (tv_get(R7C8, "Check"))
+    {
+      ControlSend,,{%hk20% Down}{%hk20% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %hk20sleep%
     }
     if (tv_get(R7C9, "Check"))
     {
@@ -474,10 +566,6 @@ attack()
       ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
 }
-
-
-
-
 
 ;{ Priest Fonksiyonlar
 
