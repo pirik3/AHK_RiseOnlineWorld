@@ -15,6 +15,7 @@
 ;   1.2] ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
 ;   1.3] Mp/HP eklendi.
 ;   1.4] Zamanli skiler eklendi.
+;	 HP/MP duzenlendi
 ;
 ;===========================================
 ;*/
@@ -46,7 +47,7 @@ pToken := Gdip_Startup()
 ;~ Menu Tray, Icon, oh.ico
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
-;~ Gui Add, Button, hWndhBtnPauserun vBtnPauserun x232 y368 w164 h23, PAUuSE / RuUN
+Gui Add, Button, hWndhBtnrenk vBtnrenk x232 y368 w164 h23 grenkal, HP/MP renk oku
 Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23, Mob AL
 Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordinat Al
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
@@ -220,6 +221,7 @@ global R2C2C2 := TV_Add("MP pot %80.", R2C2)
 global R2C2C3 := TV_Add("MP pot %70.", R2C2)
 global R2C2C4 := TV_Add("MP pot %60.", R2C2)
 global R2C2C5 := TV_Add("MP pot %50.", R2C2)
+global R2C2C6 := TV_Add("MP pot %30.", R2C2)
 ;~ global R2C3 := TV_Add("Koordinat degisirse Script durdur/kapat.", R2)
 ;~ global R2C4 := TV_Add("Partiden cikarsam?.", R2)
 ;~ global R2C4C1 := TV_Add("Chat 'e '/Town' yazarak town at.", R2C4)
@@ -325,6 +327,8 @@ global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 
 MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin., 3
 
+
+
 Pause
 
 Loop
@@ -360,6 +364,54 @@ UstteTut() ;tamam
   }
 }
 
+
+
+
+HP_MP_renk_oku() ;tamam
+{
+  renkal:
+  ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
+  ;~ IfMsgBox, Yes
+  Process, Exist, RiseOnline-Win64-Shipping.exe
+  if errorlevel
+  {
+    WinActivate, Rise Online Client
+    WinMove, Rise Online Client,, 0, 0, 1600, 900
+    CoordMode Pixel, Window
+	WinGetPos, X, Y, W, H, Rise Online Client
+    ;=========HP===================================
+    PixelGetColor, hp90_passive, 252, 94 ; 0x565DE3
+    PixelGetColor, hp80_passive, 232, 94 ; 0x5359E1
+    PixelGetColor, hp70_passive, 210, 94 ; 0x535AE0
+    PixelGetColor, hp50_passive, 170, 94 ; 0x5157DF
+    PixelGetColor, hp30_passive, 130, 94 ; 0x5156DE
+    ;=========MP===================================
+    PixelGetColor, mp90_passive, 252, 113 ; 0xD18A42
+    PixelGetColor, mp80_passive, 230, 113 ; 0xCF8C43
+    PixelGetColor, mp70_passive, 216, 113 ; 0xCE8941
+    PixelGetColor, mp60_passive, 200, 113 ; 0xCF8D45
+    PixelGetColor, mp50_passive, 170, 113 ; 0xCE8B43
+    PixelGetColor, mp30_passive, 120, 113 ; ?
+  }
+  else
+  {
+    MsgBox, 262192, Uyari!, Rise Online acik degil`, HP/MP pixelleri okunmadi.
+  }
+  return  
+}
+
+global hp90_passive
+global hp80_passive
+global hp70_passive
+global hp50_passive
+global hp30_passive
+
+global mp90_passive
+global mp80_passive
+global mp70_passive
+global mp60_passive
+global mp50_passive
+global mp30_passive
 
 Mob_Al() ;tamam
 {
@@ -427,8 +479,8 @@ HPpot() ;tamam
   PixelGetColor, hp70, 210, 94 ; 0x535AE0
   PixelGetColor, hp50, 170, 94 ; 0x5157DF
   PixelGetColor, hp30, 130, 94 ; 0x5156DE
-  ;ToolTip, %hp90%
-  if (tv_get(R2C1C1, "Check")) and (hp90 != 0x565DE3) or (tv_get(R2C1C2, "Check")) and (hp80 != 0x5359E1) or (tv_get(R2C1C3, "Check")) and (hp70 != 0x535AE0) or (tv_get(R2C1C4, "Check")) and (hp50 != 0x5157DF) or (tv_get(R2C1C5, "Check")) and (hp30 != 0x5156DE)
+  ;~ ToolTip, %hp90_passive%  // %hp90% 
+  if (tv_get(R2C1C1, "Check")) and (hp90 != hp90_passive) or (tv_get(R2C1C2, "Check")) and (hp80 != hp80_passive) or (tv_get(R2C1C3, "Check")) and (hp70 != hp70_passive) or (tv_get(R2C1C4, "Check")) and (hp50 != hp50_passive) or (tv_get(R2C1C5, "Check")) and (hp30 != hp30_passive)
   {
     ControlSend,,{1 Down}{1 Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
@@ -443,7 +495,8 @@ MPpot() ;tamam
   PixelGetColor, mp70, 216, 113 ; 0xCE8941
   PixelGetColor, mp60, 200, 113 ; 0xCF8D45
   PixelGetColor, mp50, 170, 113 ; 0xCE8B43
-  if (tv_get(R2C2C1, "Check")) and (mp90 != 0xD18A42) or (tv_get(R2C2C2, "Check")) and (mp80 != 0xCF8C43) or (tv_get(R2C2C3, "Check")) and (mp70 != 0xCE8941) or (tv_get(R2C2C4, "Check")) and (mp60 != 0xCF8D45) or (tv_get(R2C2C5, "Check")) and (mp50 != 0xCE8B43)
+  PixelGetColor, mp30, 120, 113 ; ?
+  if (tv_get(R2C2C1, "Check")) and (mp90 != mp90_passive) or (tv_get(R2C2C2, "Check")) and (mp80 != mp80_passive) or (tv_get(R2C2C3, "Check")) and (mp70 != mp70_passive) or (tv_get(R2C2C4, "Check")) and (mp60 != mp60_passive) or (tv_get(R2C2C5, "Check")) and (mp50 != mp50_passive) or if (tv_get(R2C2C6, "Check")) and (mp30 != mp30_passive)
   {
     ControlSend,,{2 Down}{2 Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
