@@ -5,7 +5,7 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.4
+;  Version : 1.3
 ;  Date    : 24/04/2022
 ;
 ;  Usage:  1600x900
@@ -15,7 +15,7 @@
 ;   1.2] ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
 ;   1.3] Mp/HP eklendi.
 ;   1.4] Zamanli skiler eklendi.
-;	 HP/MP duzenlendi
+;	     HP/MP duzenlendi
 ;
 ;===========================================
 ;*/
@@ -51,7 +51,7 @@ Gui Add, Button, hWndhBtnrenk vBtnrenk x232 y368 w164 h23 grenkal, HP/MP renk ok
 Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23, Mob AL
 Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordinat Al
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
-Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23, OKU
+Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23 gokubeni, Kullanimi
 Gui Add, TreeView, x2 y3 w228 h391 -ReadOnly AltSubmit Checked
 Gui Add, Tab3, x232 y8 w167 h305, Atak| ;Genel|Rogue|Priest|Warr.|Mage|LOG|PK
 Gui Tab, 2
@@ -325,8 +325,7 @@ global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
-MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin., 3
-
+MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin.`nKullanim bilgisini okuyunuz., 3
 
 
 Pause
@@ -365,6 +364,10 @@ UstteTut() ;tamam
 }
 
 
+okubeni:
+  MsgBox, 64, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den &'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.
+return
+
 
 
 HP_MP_renk_oku() ;tamam
@@ -374,6 +377,9 @@ HP_MP_renk_oku() ;tamam
   ;~ IfMsgBox, Yes
   ;~ Process, Exist, RiseOnline-Win64-Shipping.exe
   WinActivate, Rise Online Client
+  WinGetPos, X, Y, W, H, Rise Online Client
+  ;~ ToolTip, %X% / %Y% / %W% / %H%
+  ;~ if (W < 1650 and H < 950)
   IfWinActive, Rise Online Client
   {
     WinMove, Rise Online Client,, 0, 0, 1600, 900
@@ -394,7 +400,7 @@ HP_MP_renk_oku() ;tamam
   }
   else
   {
-    MsgBox, 262192, Uyari!, Rise Online Pencerisi one alinamadi, HP/MP pixelleri okunmadi.
+    MsgBox, 262192, Uyari!, Rise Online Pencerisi one getirilemedi, HP/MP pixelleri okunmadi.
   }
   return  
 }
