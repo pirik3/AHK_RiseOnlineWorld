@@ -5,17 +5,18 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.3
-;  Date    : 24/04/2022
+;  Version : 1.5
+;  Date    : 27/04/2022
 ;
 ;  Usage:  1600x900
 ;          Check folder images for more settings in game.
 ;
 ;  Added: 
-;   1.2] ekran pozisyon degistirilmesi eklendi. kutu aramada stabil olmasi icin.
+;   1.2] ekran pozisyon degistirilmesi eklendi. Kutu aramada stabil olmasi icin.
 ;   1.3] Mp/HP eklendi.
 ;   1.4] Zamanli skiler eklendi.
 ;	     HP/MP duzenlendi
+;   1.5] HP/MP icin key secenegi eklendi. @roker1
 ;
 ;===========================================
 ;*/
@@ -39,7 +40,6 @@ if not A_IsAdmin
 	Run *RunAs "%A_ScriptFullPath%" ; (A_AhkPath is usually optional if the script has the .ahk extension.) You would typically check  first.
 CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Window|Client]
 ;SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-;pToken := Gdip_Startup()
 t1:=A_TickCount, X:=Y:=""
 pToken := Gdip_Startup()
 
@@ -48,22 +48,22 @@ pToken := Gdip_Startup()
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
 Gui Add, Button, hWndhBtnrenk vBtnrenk x232 y368 w164 h23 grenkal, HP/MP renk oku
-Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23, Mob AL
+Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23 gMobAl, Mob AL
 Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordinat Al
 Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
 Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23 gokubeni, Kullanimi
 Gui Add, TreeView, x2 y3 w228 h391 -ReadOnly AltSubmit Checked
-Gui Add, Tab3, x232 y8 w167 h305, Atak| ;Genel|Rogue|Priest|Warr.|Mage|LOG|PK
+Gui Add, Tab3, x232 y8 w167 h305, Atak|POT| ;Rogue|Priest|Warr.|Mage|LOG|PK
 Gui Tab, 2
 Gui Add, Text, x240 y72 w50 h23 +0x200, HP pot >
-Gui Add, Hotkey, hWndhHk5 vHk x296 y72 w18 h23, F1
+;~ Gui Add, Hotkey, hWndhHk5 vHk x296 y72 w18 h23, F1
 global Hk
-Gui Add, Hotkey, hWndhHk5 vHk5 x336 y72 w18 h23, 1
+Gui Add, Hotkey, hWndhHk5 vHk5 x296 y72 w18 h23, 1
 global Hk5
 Gui Add, Text, x240 y96 w50 h23 +0x200, MP pot >
-Gui Add, Hotkey, hWndhHk2 vHk2 x296 y96 w18 h23, f1
+;~ Gui Add, Hotkey, hWndhHk2 vHk2 x296 y96 w18 h23, f1
 global Hk2
-Gui Add, Hotkey, hWndhHk6 vHk6 x336 y96 w18 h23, 2
+Gui Add, Hotkey, hWndhHk6 vHk6 x296 y96 w18 h23, 2
 global Hk6
 ;~ Gui Add, Text, x240 y120 w93 h23 +0x200, Magic Hammer >
 ;~ Gui Add, Hotkey, hWndhHk3 vHk3 x336 y120 w18 h23, f5
@@ -304,6 +304,9 @@ global R9C8 := TV_Add("Atak KEY [8].", R9)
 global R9C9 := TV_Add("Atak KEY [9].", R9)
 global R9C10 := TV_Add("Atak KEY [0].", R9)
 ;~ global R9C11 := TV_Add("Mob sec. / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
+global R10 := TV_Add("Silah Degistir -> Kisyayol Key ile [``].", R10)
+global R10C1 := TV_Add("Silah Degistir -> 1 silah/slot [``].", R10)
+global R10C2 := TV_Add("Silah Degistir -> 2 silah/slot [``].", R10)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
@@ -341,11 +344,11 @@ Loop
   {
     ;============================
     UstteTut()
+    HPpot()
+    MPpot()
     AutoLoot()
     attack()
     Mobattack()
-    HPpot()
-    MPpot()
     ;============================
   }
   Else
@@ -365,7 +368,7 @@ UstteTut() ;tamam
 
 
 okubeni:
-  MsgBox, 64, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den &'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.
+  MsgBox, 32, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den yuzde'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.`n`n[5] Silah degistirmek icin ilk 2 slotu kullaniniz. Hoykey `` tusu ile.
 return
 
 
@@ -420,7 +423,13 @@ global mp30_passive
 
 Mob_Al() ;tamam
 {
-  ButtonMobAl:
+  MobAl:
+  WinActivate, Rise Online Client
+  WinGetPos, X, Y, W, H, Rise Online Client
+  ;~ ToolTip, %X% / %Y% / %W% / %H%
+  ;~ if (W < 1650 and H < 950)
+  IfWinActive, Rise Online Client
+  {
   ;~ MSGBox, 4, , 1. mobu 'Z' ye aliniz. Sonra 'YES' tusuna basiniz.
   ;~ IfMsgBox, Yes
     WinActivate, Rise Online Client
@@ -435,6 +444,11 @@ Mob_Al() ;tamam
     ;~ WinGetPos, X, Y, W, H, Rise Online Client
     ;~ mob2 := Gdip_BitmapFromScreen(624 . "|" . 44 . "|" . 52 . "|" . 56)
     ;~ Gdip_SaveBitmapToFile(mob2, "Rise_Mob2.jpg")
+    }
+  else
+  {
+    MsgBox, 262192, Uyari!, Rise Online Pencerisi one getirilemedi, HP/MP pixelleri okunmadi.
+  }
   return  
 }
 
@@ -487,7 +501,7 @@ HPpot() ;tamam
   ;~ ToolTip, %hp90_passive%  // %hp90% 
   if (tv_get(R2C1C1, "Check")) and (hp90 != hp90_passive) or (tv_get(R2C1C2, "Check")) and (hp80 != hp80_passive) or (tv_get(R2C1C3, "Check")) and (hp70 != hp70_passive) or (tv_get(R2C1C4, "Check")) and (hp50 != hp50_passive) or (tv_get(R2C1C5, "Check")) and (hp30 != hp30_passive)
   {
-    ControlSend,,{1 Down}{1 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%Hk5% Down}{%Hk5% Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
 }
 
@@ -503,7 +517,7 @@ MPpot() ;tamam
   PixelGetColor, mp30, 120, 113 ; ?
   if (tv_get(R2C2C1, "Check")) and (mp90 != mp90_passive) or (tv_get(R2C2C2, "Check")) and (mp80 != mp80_passive) or (tv_get(R2C2C3, "Check")) and (mp70 != mp70_passive) or (tv_get(R2C2C4, "Check")) and (mp60 != mp60_passive) or (tv_get(R2C2C5, "Check")) and (mp50 != mp50_passive) or if (tv_get(R2C2C6, "Check")) and (mp30 != mp30_passive)
   {
-    ControlSend,,{2 Down}{2 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%Hk6% Down}{%Hk6% Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
 }
 
@@ -810,6 +824,32 @@ rogueatackf2()
 ;}
 
 `::
+if (tv_get(R10C1, "Check"))
+{
+  ControlSend,,{Esc Down}{Esc Up},Rise Online Client
+  Sleep, 10
+  ControlSend,,{i Down}{i Up}, AHK_exe RiseOnline-Win64-Shipping.exe
+  Sleep, 10
+  ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right ; 1 slot silah degistir
+  Sleep, 10
+  ControlSend,,{Esc Down}{Esc Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  Sleep, 10
+  ControlSend,,{Esc Down}{Esc Up},AHK_exe RiseOnline-Win64-Shipping.exe
+}
+if (tv_get(R10C2, "Check"))
+{
+  ControlSend,,{Esc Down}{Esc Up},Rise Online Client
+  Sleep, 10
+  ControlSend,,{i Down}{i Up}, AHK_exe RiseOnline-Win64-Shipping.exe
+  Sleep, 10
+  ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right ; 1. slot silah degistir
+  Sleep, 10
+  ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right ; 2. slot silah degistir
+  Sleep, 10
+  ControlSend,,{Esc Down}{Esc Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  Sleep, 10
+  ControlSend,,{Esc Down}{Esc Up},AHK_exe RiseOnline-Win64-Shipping.exe
+}
 ;~ ControlSend,,{Esc Down}{Esc Up},Rise Online Client
 ;~ Sleep, 10
 ;~ ControlSend,,{i Down}{i Up}, AHK_exe RiseOnline-Win64-Shipping.exe
@@ -818,7 +858,7 @@ rogueatackf2()
 ;~ if (!ErrorLevel)
 ;~ {
 ;~ Sleep, 10
-ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
+;~ ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
 ;~ ControlClick, x1277 y474, AHK_exe RiseOnline-Win64-Shipping.exe, , Right ;1600x900
 ;~ Sleep, 10
 ;~ ControlSend,,{Esc Down}{Esc Up},AHK_exe RiseOnline-Win64-Shipping.exe
@@ -828,8 +868,10 @@ ControlClick, x1403 y606, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
 return
   
 
- Home::ExitApp
- Esc::Pause
+Home::ExitApp
+Esc::Pause
+GuiClose:
+ExitApp
 
 
 
