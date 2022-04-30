@@ -5,8 +5,8 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.5
-;  Date    : 27/04/2022
+;  Version : 1.6
+;  Date    : 30/04/2022
 ;
 ;  Usage:  1600x900
 ;          Check folder images for more settings in game.
@@ -17,14 +17,11 @@
 ;   1.4] Zamanli skiler eklendi.
 ;	     HP/MP duzenlendi
 ;   1.5] HP/MP icin key secenegi eklendi. @roker1
+;   1.6] Mob atak duzenlendi, aun icin calisiyor fakat %100 stabil degil.
 ;
 ;===========================================
 ;*/
 
-; #Include <FindText>
-; #Include Gdip.ahk
-
-; Ensures that there is only a single instance of this script running
 ;=========================================================================================
 
 #SingleInstance, Force
@@ -45,6 +42,8 @@ pToken := Gdip_Startup()
 
 ;~ FileInstall, C:\Users\pirik3\Downloads\oh.ico, %a_temp%/oh.ico ; put in auto-execute section at top of script
 ;~ Menu Tray, Icon, oh.ico
+
+
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
 Gui Add, Button, hWndhBtnrenk vBtnrenk x232 y368 w164 h23 grenkal, HP/MP renk oku
@@ -208,14 +207,14 @@ Gui Tab
 Gui Show, w402 h397, ROW Yardimci
 ;{ ===================TreeView====Inner=Text==========================================;
 global R1 := TV_Add("Ustte tut." , R1)
-global R2 := TV_Add("Genel." , R2) 
-global R2C1 := TV_Add("HP doldur. KEY [1]" , R2)  
+global R2 := TV_Add("Genel/Pot." , R2) 
+global R2C1 := TV_Add("HP doldur. KEY [1/?]" , R2)  
 global R2C1C1 := TV_Add("HP pot/minor/heal %90.",R2C1) 
 global R2C1C2 := TV_Add("HP pot/minor/heal %80.", R2C1)
 global R2C1C3 := TV_Add("HP pot/minor/heal %70.", R2C1)
 global R2C1C4 := TV_Add("HP pot/minor/heal %50.", R2C1)
 global R2C1C5 := TV_Add("HP pot/minor/heal %30.", R2C1)
-global R2C2 := TV_Add("MP doldur. KEY[2]", R2)
+global R2C2 := TV_Add("MP doldur. KEY[2/?]", R2)
 global R2C2C1 := TV_Add("MP pot %90.", R2C2)
 global R2C2C2 := TV_Add("MP pot %80.", R2C2)
 global R2C2C3 := TV_Add("MP pot %70.", R2C2)
@@ -292,15 +291,15 @@ global R7C10 := TV_Add("Atak KEY [0].", R7)
 ;~ global R8C5 := TV_Add("Yere vur, x4 skill -> hotkey ile.", R8)
 ;~ global R8C6 := TV_Add("Kilic bas.", R8)
 ;~ global R8C7 := TV_Add("Frenzy bas.", R8)
-global R9 := TV_Add("Mob_Atak. [Deneme asamasinda...]", R9)
+global R9 := TV_Add("Mob_Atak. [Calisiyor, stabil degil %100, deneme asamasinda...]", R9)
 global R9C1 := TV_Add("Atak KEY [Z].", R9)
-global R9C2 := TV_Add("Atak KEY [Rr].", R9)
-global R9C3 := TV_Add("Atak KEY [3].", R9)
-global R9C4 := TV_Add("Atak KEY [4].", R9)
-global R9C5 := TV_Add("Atak KEY [5].", R9)
-global R9C6 := TV_Add("Atak KEY [6].", R9)
-global R9C7 := TV_Add("Atak KEY [7].", R9)
-global R9C8 := TV_Add("Atak KEY [8].", R9)
+global R9C2 := TV_Add("Atak KEY [7] > [Rr].", R9)
+global R9C3 := TV_Add("Atak > [1].", R9)
+global R9C4 := TV_Add("Atak > [2].", R9)
+global R9C5 := TV_Add("Atak > [3].", R9)
+global R9C6 := TV_Add("Atak > [4].", R9)
+global R9C7 := TV_Add("Atak > [5].", R9)
+global R9C8 := TV_Add("Atak > [6].", R9)
 global R9C9 := TV_Add("Atak KEY [9].", R9)
 global R9C10 := TV_Add("Atak KEY [0].", R9)
 ;~ global R9C11 := TV_Add("Mob sec. / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
@@ -322,8 +321,9 @@ global WillBreaker:="|<WillBreaker>*89$23.y7y2zzkETV3070D801m7lbW2/U5kAk31RDU3UQ
 global Drop2:="|<Drop>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMTzzjzzyy"
 global drop3:="|<drop3>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
-
-
+global Zblocked:="|<Zblocked>*39$37.DDznzy7rzxzz3vryzzUBVVG62ma7WONNH7l1Ahd1uba0Y61cM8"
+global z:="|<z>*35$6.Uxtvnb70U"
+global zrenk:="|<zrenk>##0$0/0/FF0000,0/-1/F50000,1/-3/E60101"
 
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
@@ -349,8 +349,12 @@ Loop
     AutoLoot()
     attack()
     Mobattack()
+    ;~ Zblocked_control()
     ;============================
+    ;~ var++
+    ;~ ToolTip, %var%
   }
+  
   Else
   {
     MsgBox, 262192, Uyari!, Rise Online acik degil`, script kapatilacak.
@@ -366,9 +370,25 @@ UstteTut() ;tamam
   }
 }
 
+RandomSleep(min,max)
+{
+Random, random, %min%, %max%
+Sleep, %random%
+}
+
+Zblocked_control()
+{
+  CoordMode Pixel, Window
+  ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  PixelGetColor, zblocked, 1226, 623
+  if (zblocked = 0x0000FE)
+  {
+    Pause
+  }
+}
 
 okubeni:
-  MsgBox, 32, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den yuzde'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.`n`n[5] Silah degistirmek icin ilk 2 slotu kullaniniz. Hoykey `` tusu ile.
+  MsgBox, 32, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den yuzde'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.`n`n[5] Silah degistirmek icin ilk 2 slotu kullaniniz. Hoykey `` tusu ile.`n`n[6] Mob atak icin, once mob aliniz
 return
 
 
@@ -425,7 +445,7 @@ Mob_Al() ;tamam
 {
   MobAl:
   WinActivate, Rise Online Client
-  WinGetPos, X, Y, W, H, Rise Online Client
+  ;~ WinGetPos, X, Y, W, H, Rise Online Client
   ;~ ToolTip, %X% / %Y% / %W% / %H%
   ;~ if (W < 1650 and H < 950)
   IfWinActive, Rise Online Client
@@ -436,14 +456,14 @@ Mob_Al() ;tamam
     WinMove, Rise Online Client,, 0, 0, 1600, 900
     CoordMode Pixel, Window
 	WinGetPos, X, Y, W, H, Rise Online Client
-    mob1 := Gdip_BitmapFromScreen(794 . "|" . 37 . "|" . 6 . "|" . 10)
-    Gdip_SaveBitmapToFile(mob1, "Rise_Mob1.jpg")
+    mob1 := Gdip_BitmapFromScreen(813 . "|" . 42 . "|" . 12 . "|" . 8)
+    Gdip_SaveBitmapToFile(mob1, "RiseMob1.jpg")
     ;GuiControl,,  pic2 , Mob1.jpg
   ;~ MSGBox, 4, , 2. mob varmi,? Varsa Z 'ye aliniz, sonra YES tusuna basiniz.
   ;~ IfMsgBox, Yes
     ;~ WinGetPos, X, Y, W, H, Rise Online Client
-    ;~ mob2 := Gdip_BitmapFromScreen(624 . "|" . 44 . "|" . 52 . "|" . 56)
-    ;~ Gdip_SaveBitmapToFile(mob2, "Rise_Mob2.jpg")
+    ;~ mob2 := Gdip_BitmapFromScreen(813 . "|" . 42 . "|" . 12 . "|" . 8)
+    ;~ Gdip_SaveBitmapToFile(mob2, "RiseMob2.jpg")
     }
   else
   {
@@ -523,66 +543,72 @@ MPpot() ;tamam
 
 Mobattack()
 {
-  
-	;~ WinGetPos, X, Y, W, H, Rise Online Client
-    if (tv_get(R9C1, "Check"))
-    {
-      ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    } 
-    
+  if (tv_get(R9C1, "Check"))
+  {
+    ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    RandomSleep(0.5,1)
+  }
+	WinGetPos, X, Y, W, H, Rise Online Client
     CoordMode, Pixel, Window
-    ImageSearch, X, Y, 783, 29, 809, 55, *90 Rise_Mob1.jpg
-    if (ErrorLevel=0)
+    ImageSearch, Xx, Yy, 788, 33, 840, 57, *110 RiseMob1.jpg
+    If (ErrorLevel = 0)
     {
       ;~ ToolTip, bulundu %OutputVarX% %OutputVarY%
       ;~ MouseMove, %OutputVarX%, %OutputVarY%
-      SplashTextOff 
+      ;~ SplashTextOff 
       ;~ FindText().MouseTip(ok[i].X, ok[i].Y)
-      
-	if (tv_get(R9C2, "Check"))
-    {
-      ControlSend,,{r Down}{r Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    
+      if (tv_get(R9C2, "Check"))
+      {
+        ControlSend,,{%hkRr% Down}{%hkRr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hkRrsleep%
+      }
+      if (tv_get(R9C3, "Check"))
+      {
+        ControlSend,,{%hk14% Down}{%hk14% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk14sleep%
+      }
+      if (tv_get(R9C4, "Check"))
+      {
+        ControlSend,,{%hk15% Down}{%hk15% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk15sleep%
+      }
+      if (tv_get(R9C5, "Check"))
+      {
+        ControlSend,,{%hk16% Down}{%hk16% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk16sleep%
+      }
+      if (tv_get(R9C6, "Check"))
+      {
+        ControlSend,,{%hk17% Down}{%hk17% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk17sleep%
+      }
+      if (tv_get(R9C7, "Check"))
+      {
+        ControlSend,,{%hk18% Down}{%hk18% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk18sleep%    
+      }
+      if (tv_get(R9C8, "Check"))
+      {
+        ControlSend,,{%hk20% Down}{%hk20% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+        Sleep, %hk20sleep%
+      }
+      if (tv_get(R9C9, "Check"))
+      {
+        ControlSend,,{9 Down}{9 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      }
+      if (tv_get(R9C10, "Check"))
+      {
+        ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      }
     }
-    if (tv_get(R9C3, "Check"))
-    {
-      ControlSend,,{3 Down}{3 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C4, "Check"))
-    {
-      ControlSend,,{4 Down}{4 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C5, "Check"))
-    {
-      ControlSend,,{5 Down}{5 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C6, "Check"))
-    {
-      ControlSend,,{6 Down}{6 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C7, "Check"))
-    {
-      ControlSend,,{7 Down}{7 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C8, "Check"))
-    {
-      ControlSend,,{8 Down}{8 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C9, "Check"))
-    {
-      ControlSend,,{9 Down}{9 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-    if (tv_get(R9C10, "Check"))
-    {
-      ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    }
-  }
-  else
-    {
-      ;~ SplashTextOn, 300, 0, Rise_Mob1.jpg bulunamadi.
-      ;~ Sleep, 3000
-      ;~ SplashTextOff      
-      ;~ Pause
-    }
+    else
+      {
+        ;~ SplashTextOn, 300, 0, Rise_Mob1.jpg bulunamadi.
+        ;~ Sleep, 3000
+        ;~ SplashTextOff      
+        ;~ Pause
+      }
 }
 
 attack()
@@ -590,7 +616,7 @@ attack()
     if (tv_get(R7C1, "Check"))
     {
       ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, 100
+      RandomSleep(0.5,1)
     } 
 	if (tv_get(R7C2, "Check"))
     {
