@@ -45,7 +45,6 @@ whr.Send()
 ; Using 'true' above and the call below allows the script to remain responsive.
 whr.WaitForResponse() ;this is taken from the installer. Can also be located as an example on the urldownloadtofile page of the quick reference guide.
 version := whr.ResponseText
-MsgBox, 0, Guncelleme?, Suanki version -> %Vnum%`nGuncel version -> %version%`nGuncellemeleri Github uzerinden indirebilirisiniz.
 ;================================
 
 #SingleInstance, Force
@@ -268,6 +267,7 @@ global zrenk:="|<zrenk>##0$0/0/FF0000,0/-1/F50000,1/-3/E60101"
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
+MsgBox, 0, Guncelleme?, Suanki version -> %Vnum%`nGuncel version -> %version%`nGuncellemeleri Github uzerinden indirebilirisiniz.
 MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin.`nKullanim bilgisini okuyunuz., 3
 
 Pause
