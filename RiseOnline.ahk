@@ -8,7 +8,9 @@
 ;  Version : 1.6
 ;  Date    : 30/04/2022
 ;
-;  Usage:  1600x900
+;  Usage:  ESC -> START/Pause
+;          HOME -> Terminate Scipt
+;          1600x900
 ;          Check folder images for more settings in game.
 ;
 ;  Added: 
@@ -18,6 +20,8 @@
 ;	     HP/MP duzenlendi
 ;   1.5] HP/MP icin key secenegi eklendi. @roker1
 ;   1.6] Mob atak duzenlendi, aun icin calisiyor fakat %100 stabil degil.
+;        GUI calismasi yapildi. Gelisme oldukca eklenecektir.
+;        Z block icin, mob click hazir fakat stabil degil. (bkz. Z_blocked_mobclick(), Z_blocked_partyclick())
 ;
 ;===========================================
 ;*/
@@ -46,165 +50,78 @@ pToken := Gdip_Startup()
 
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
-Gui Add, Button, hWndhBtnrenk vBtnrenk x232 y368 w164 h23 grenkal, HP/MP renk oku
-Gui Add, Button, hWndhBtnMobAl vBtnMobAl x312 y336 w80 h23 gMobAl, Mob AL
-Gui Add, Button, hWndhBtnKoordinatAl3 vBtnKoordinatAl3 x232 y312 w80 h23, Koordinat Al
-Gui Add, Button, hWndhBtnNickAl4 vBtnNickAl4 x232 y336 w80 h23, Nick Al
-Gui Add, Button, hWndhBtnOku5 vBtnOku5 x312 y312 w80 h23 gokubeni, Kullanimi
-Gui Add, TreeView, x2 y3 w228 h391 -ReadOnly AltSubmit Checked
-Gui Add, Tab3, x232 y8 w167 h305, Atak|POT| ;Rogue|Priest|Warr.|Mage|LOG|PK
-Gui Tab, 2
-Gui Add, Text, x240 y72 w50 h23 +0x200, HP pot >
-;~ Gui Add, Hotkey, hWndhHk5 vHk x296 y72 w18 h23, F1
-global Hk
-Gui Add, Hotkey, hWndhHk5 vHk5 x296 y72 w18 h23, 1
-global Hk5
-Gui Add, Text, x240 y96 w50 h23 +0x200, MP pot >
-;~ Gui Add, Hotkey, hWndhHk2 vHk2 x296 y96 w18 h23, f1
-global Hk2
-Gui Add, Hotkey, hWndhHk6 vHk6 x296 y96 w18 h23, 2
-global Hk6
-;~ Gui Add, Text, x240 y120 w93 h23 +0x200, Magic Hammer >
-;~ Gui Add, Hotkey, hWndhHk3 vHk3 x336 y120 w18 h23, f5
-;~ Gui Add, Hotkey, hWndhHk7 vHk7 x376 y120 w18 h23, 5
-;~ Gui Add, Text, x240 y144 w93 h23 +0x200, Trans. SC >
-;~ Gui Add, Hotkey, hWndhHk4 vHk4 x336 y144 w18 h23, f5
-;~ global Hk4
-;~ Gui Add, Hotkey, hWndhHk8 vHk8 x376 y144 w18 h23, 2
-;~ global Hk6
-;~ Gui Add, Text, x240 y168 w93 h23 +0x200, Gate Skll >
-;~ Gui Add, Hotkey, hWndhHkGate1 vHkGate1 x296 y168 w18 h23, f2
-;~ global HkGate1
-;~ Gui Add, Hotkey, hWndhHkGate2 vHkGAte2 x336 y168 w18 h23, 8
-;~ global HkGate2
-;~ Gui Add, Text, x320 y72 w9 h23 +0x200, +
-;~ Gui Add, Text, x320 y96 w9 h23 +0x200, +
-;~ Gui Add, Text, x360 y120 w9 h23 +0x200, +
-;~ Gui Add, Text, x360 y144 w9 h23 +0x200, +
-;~ Gui Add, Text, x320 y168 w9 h23 +0x200, +
+Gui Add, TreeView, x0 y0 w220 h422 -ReadOnly AltSubmit Checked
+Gui Add, Button, x336 y376 w110 h23 gMobAl, &Mob AL
+Gui Add, Button, x224 y376 w110 h23, Koordinat AL
+Gui Add, Button, x224 y400 w110 h23, &Nick AL
+Gui Add, Button, x336 y400 w110 h23 grenkal, &HP/MP renk oku
+Gui Add, Button, x224 y352 w110 h23, &Party HP renk oku
+Gui Add, Button, x336 y352 w110 h23 gokubeni, &KULLANIMI(OKU)
+Gui Add, Tab3, x224 y0 w222 h350, KEY'S|Atak|Priest|Party
+
 Gui Tab, 1
-Gui Add, Text, x240 y104 w19 h23 +0x200, 1 >
-Gui Add, Text, x240 y128 w19 h23 +0x200, 2 >
-Gui Add, Text, x240 y152 w19 h23 +0x200, 3 >
-Gui Add, Text, x240 y176 w19 h23 +0x200, 4 >
-Gui Add, Text, x240 y200 w19 h23 +0x200, 5 >
-Gui Add, Hotkey, hWndhHk9 vHk9 x264 y104 w18 h23, f1
-Gui Add, Hotkey, hWndhHk10 vHk10 x264 y128 w18 h23, f1
-Gui Add, Hotkey, hWndhHk11 vHk11 x264 y152 w18 h23, f1
-Gui Add, Hotkey, hWndhHk12 vHk12 x264 y176 w18 h23, f1
-Gui Add, Hotkey, hWndhHk13 vHk13 x264 y200 w18 h23, f1
-Gui Add, Text, x288 y104 w9 h23 +0x200, +
-Gui Add, Text, x288 y128 w9 h23 +0x200, +
-Gui Add, Text, x288 y152 w9 h23 +0x200, +
-Gui Add, Text, x288 y176 w9 h23 +0x200, +
-Gui Add, Text, x288 y200 w9 h23 +0x200, +
-Gui Add, Hotkey, hWndhHk14 vHk14 x304 y104 w18 h23, 3
-global Hk14
-Gui Add, Hotkey, hWndhHk15 vHk15 x304 y128 w18 h23, 4
-global Hk15
-Gui Add, Hotkey, hWndhHk16 vHk16 x304 y152 w18 h23, 5
-global Hk16
-Gui Add, Hotkey, hWndhHk17 vHk17 x304 y176 w18 h23, 6
-global Hk17
-Gui Add, Hotkey, hWndhHk18 vHk18 x304 y200 w18 h23, 7
-global Hk18
-Gui Add, Edit, x344 y104 w48 h21 vhk14sleep, 1001
-global hk14sleep
-Gui Add, Text, x328 y104 w9 h23 +0x200, +
-Gui Add, Text, x328 y128 w9 h23 +0x200, +
-Gui Add, Text, x328 y152 w9 h23 +0x200, +
-Gui Add, Text, x328 y176 w9 h23 +0x200, +
-Gui Add, Text, x328 y200 w9 h23 +0x200, +
-Gui Add, Edit, x344 y128 w48 h21 vhk15sleep, 1002
-global hk15sleep
-Gui Add, Edit, x344 y152 w48 h21 vhk16sleep, 3001
-global hk16sleep
-Gui Add, Edit, x344 y176 w48 h21 vhk17sleep, 2000
-global hk17sleep
-Gui Add, Edit, x344 y200 w48 h21 vhk18sleep, 1009
-global hk18sleep
-Gui Add, Text, x288 y72 w102 h23 +0x200, Zaman(1sn = 1000)
-Gui Add, Text, x240 y224 w19 h23 +0x200, 6 >
-Gui Add, Text, x240 y248 w19 h23 +0x200, 7 >
-Gui Add, Hotkey, hWndhHk19 vHk19 x264 y224 w18 h23, f1
-Gui Add, Hotkey, hWndhHk20 vHk20 x304 y224 w18 h23, 8
-global Hk20
-Gui Add, Edit, x344 y224 w48 h21 vhk20sleep, 1008
-global hk20sleep
-Gui Add, Text, x328 y224 w9 h23 +0x200, +
-Gui Add, Text, x288 y224 w9 h23 +0x200, +
-Gui Add, Hotkey, hWndhHkRr vHkRr x304 y248 w18 h23, R
-global HkRr
-Gui Add, Text, x328 y248 w9 h23 +0x200, +
-Gui Add, Edit, x344 y248 w48 h21 vhkRrsleep, 1007
-global hkRrsleep
-Gui Add, DropDownList, x240 y272 w150, Archer > 3-5 combo|Priest > [pasif]|
-Gui Tab, 3
-Gui Add, Hotkey, hWndhHk21 vHk21 x296 y72 w18 h23, f1
-Gui Add, Text, x240 y72 w39 h23 +0x200, Wolf >
-Gui Add, Text, x240 y96 w45 h23 +0x200, L. Feet >
-Gui Add, Hotkey, hWndhHk22 vHk22 x296 y96 w18 h23, f1
-Gui Add, Hotkey, hWndhHk23 vHk23 x296 y120 w18 h23, f2
-Gui Add, Text, x240 y120 w45 h23 +0x200, SW >
-Gui Add, Text, x240 y144 w45 h23 +0x200, AC-1 >
-Gui Add, Text, x240 y216 w45 h23 +0x200, Cure >
-Gui Add, Hotkey, hWndhHk24 vHk24 x296 y144 w18 h23, f2
-Gui Add, Hotkey, hWndhHk25 vHk25 x296 y216 w18 h23, f2
-Gui Add, Text, x240 y168 w45 h23 +0x200, AC-2 >
-Gui Add, Text, x240 y192 w45 h23 +0x200, AC-3 >
-Gui Add, Hotkey, hWndhHk26 vHk26 x296 y168 w18 h23, f2
-Gui Add, Hotkey, hWndhHk27 vHk27 x296 y192 w18 h23, f2
-Gui Add, Text, x240 y240 w45 h23 +0x200, Minor >
-Gui Add, Hotkey, hWndhHk28 vHk28 x296 y240 w18 h23, f1
-Gui Add, Text, x320 y96 w9 h23 +0x200, +
-Gui Add, Text, x320 y120 w9 h23 +0x200, +
-Gui Add, Text, x320 y144 w9 h23 +0x200, +
-Gui Add, Text, x320 y168 w9 h23 +0x200, +
-Gui Add, Text, x320 y192 w9 h23 +0x200, +
-Gui Add, Text, x320 y72 w9 h23 +0x200, +
-Gui Add, Text, x320 y216 w9 h23 +0x200, +
-Gui Add, Text, x320 y240 w9 h23 +0x200, +
-Gui Add, Hotkey, hWndhHk29 vHk29 x336 y72 w18 h23, 9
-Gui Add, Hotkey, hWndhHk30 vHk30 x336 y96 w18 h23, 5
-Gui Add, Hotkey, hWndhHk31 vHk31 x336 y120 w18 h23, 9
-Gui Add, Hotkey, hWndhHk32 vHk32 x336 y144 w18 h23, 6
-Gui Add, Hotkey, hWndhHk33 vHk33 x336 y168 w18 h23, 7
-Gui Add, Hotkey, hWndhHk34 vHk34 x336 y192 w18 h23, 8
-Gui Add, Hotkey, hWndhHk35 vHk35 x336 y216 w18 h23, 4
-Gui Add, Hotkey, hWndhHk36 vHk36 x336 y240 w18 h23, 0
-Gui Tab, 4
-Gui Add, Text, x240 y72 w40 h23 +0x200, Kitap >
-Gui Add, Text, x240 y96 w49 h23 +0x200, STR 15 >
-Gui Add, Text, x240 y120 w48 h23 +0x200, STR 30 >
-Gui Add, Text, x240 y144 w40 h23 +0x200, Buff >
-Gui Add, Text, x240 y168 w40 h23 +0x200, AC >
-Gui Add, Text, x240 y192 w40 h23 +0x200, Fresh >
-Gui Add, Text, x240 y216 w40 h23 +0x200, Cure >
-Gui Add, Hotkey, hWndhHk37 vHk37 x296 y72 w18 h23, f1
-Gui Add, Hotkey, hWndhHk38 vHk38 x296 y96 w18 h23, f2
-Gui Add, Hotkey, hWndhHk39 vHk39 x296 y120 w18 h23, f1
-Gui Add, Hotkey, hWndhHk40 vHk40 x296 y144 w18 h23, f2
-Gui Add, Hotkey, hWndhHk41 vHk41 x296 y168 w18 h23, f2
-Gui Add, Hotkey, hWndhHk42 vHk42 x296 y192 w18 h23, f2
-Gui Add, Hotkey, hWndhHk42 vHk43 x296 y216 w18 h23, f2
-Gui Add, Hotkey, hWndhHk43 vHk44 x336 y72 w18 h23, 1
-Gui Add, Hotkey, hWndhHk44 vHk45 x336 y96 w18 h23, 1
-Gui Add, Hotkey, hWndhHk45 vHk46 x336 y120 w18 h23, 1
-Gui Add, Hotkey, hWndhHk46 vHk47 x336 y144 w18 h23, 1
-Gui Add, Hotkey, hWndhHk47 vHk48 x336 y168 w18 h23, 1
-Gui Add, Hotkey, hWndhHk48 vHk49 x336 y192 w18 h23, 1
-Gui Add, Hotkey, hWndhHk48 vHk50 x336 y216 w18 h23, 1
-Gui Add, Text, x320 y72 w9 h23 +0x200, +
-Gui Add, Text, x320 y96 w9 h23 +0x200, +
-Gui Add, Text, x320 y120 w9 h23 +0x200, +
-Gui Add, Text, x320 y144 w9 h23 +0x200, +
-Gui Add, Text, x320 y168 w9 h23 +0x200, +
-Gui Add, Text, x320 y192 w9 h23 +0x200, +
-Gui Add, Text, x320 y216 w9 h23 +0x200, +
-Gui Tab, 7
-Gui Add, ListView, x234 y72 w160 h237 +LV0x4000, ListView
-Gui Tab
-Gui Show, w402 h397, ROW Yardimci
+Gui Add, Text, x232 y32 w52 h23 +0x200, HP Key > 
+Gui Add, Hotkey, vhppot x288 y32 w55 h21, 1
+Gui Add, Text, x232 y56 w52 h23 +0x200, MP Key > 
+Gui Add, Hotkey, vmppot x288 y56 w55 h21, 2
+global hppot, mppot
+Gui Add, Text, x232 y88 w67 h23 +0x200, Sprint Key >
+Gui Add, Hotkey, x304 y88 w55 h21, 8
+Gui Add, Text, x232 y112 w68 h23 +0x200, Rush Key > 
+Gui Add, Hotkey, x304 y112 w55 h21, 9
+Gui Add, Text, x232 y208 w93 h23 +0x200, Adrenaline Key > 
+Gui Add, Hotkey, x328 y208 w55 h21, 0
+Gui Add, Text, x232 y136 w69 h23 +0x200, DEF-1 Key > 
+Gui Add, Hotkey, x304 y136 w55 h21, 7
+Gui Add, Text, x232 y160 w69 h23 +0x200, DEF-2 Key > 
+Gui Add, Hotkey, x304 y160 w55 h21, 8
+Gui Add, Text, x232 y184 w69 h23 +0x200, DEF-3 Key > 
+Gui Add, Hotkey, x304 y184 w55 h21, 9
+Gui Add, Text, x232 y248 w69 h23 +0x200, STR 30 Key > 
+Gui Add, Hotkey, x304 y248 w55 h21, 0
+Gui Add, Text, x232 y272 w69 h23 +0x200, Kitap Key > 
+Gui Add, Hotkey, x304 y272 w55 h21, 9
+
+Gui Tab, 2
+Gui Add, Text, x336 y32 w100 h23 +0x200, Saniye? (1sn=1000)
+Gui Add, Text, x264 y32 w67 h23 +0x200, % "  F? + KEY?"
+Gui Add, Text, x232 y56 w26 h23 +0x200, [1] > 
+Gui Add, Hotkey, vkey1 x264 y56 w67 h21, 1
+Gui Add, Edit, vkey1sleep x336 y56 w40 h21, 1000
+Gui Add, Text, x232 y80 w26 h23 +0x200, [2] > 
+Gui Add, Hotkey, vkey2 x264 y80 w66 h21, 2
+Gui Add, Edit, vkey2sleep x336 y80 w40 h21, 1000
+Gui Add, Text, x232 y104 w26 h23 +0x200, [3] > 
+Gui Add, Hotkey, vkey3 x264 y104 w66 h21, 3
+Gui Add, Edit, vkey3sleep x336 y104 w40 h21, 1000
+Gui Add, Text, x232 y128 w26 h23 +0x200, [4] > 
+Gui Add, Hotkey, vkey4 x264 y128 w66 h21, 4
+Gui Add, Edit, vkey4sleep x336 y128 w40 h21, 1000
+Gui Add, Text, x232 y152 w26 h23 +0x200, [5] > 
+Gui Add, Hotkey, vkey5 x264 y152 w66 h21, 5
+Gui Add, Edit, vkey5sleep x336 y152 w40 h21, 1000
+Gui Add, Text, x232 y176 w26 h23 +0x200, [6] > 
+Gui Add, Hotkey, vkey6 x264 y176 w66 h21, 6
+Gui Add, Edit, vkey6sleep x336 y176 w40 h21, 1000
+Gui Add, Text, x232 y200 w26 h23 +0x200, [7] > 
+Gui Add, Hotkey, vkey7 x264 y200 w66 h21, 7
+Gui Add, Edit, vkey7sleep x336 y200 w40 h21, 1000
+Gui Add, Text, x232 y224 w26 h23 +0x200, [8] > 
+Gui Add, Hotkey, vkey8 x264 y224 w66 h21, 8
+Gui Add, Edit, vkey8sleep x336 y224 w40 h21, 1000
+Gui Add, Text, x232 y248 w26 h23 +0x200, [9] > 
+Gui Add, Hotkey, vkey9 x264 y248 w66 h21, 9
+Gui Add, Edit, vkey9sleep x336 y248 w40 h21, 1000
+Gui Add, Text, x232 y272 w26 h23 +0x200, [0] > 
+Gui Add, Hotkey, vkey0 x264 y272 w66 h21, 0
+Gui Add, Edit, vkey0sleep x336 y272 w40 h21, 1000
+Gui Add, Text, x232 y296 w26 h23 +0x200, [Z] > 
+Gui Add, Hotkey, vkeyz x264 y296 w66 h21, Z
+Gui Add, Edit, vkeyzsleep x336 y296 w40 h21, 1000
+Gui Add, Text, x232 y320 w26 h23 +0x200, [R] > 
+Gui Add, Hotkey, vkeyr x264 y320 w66 h21, r
+Gui Add, Edit, vkeyrsleep x336 y320 w40 h21, 1000
+global key1, key1sleep, key2, key2sleep, key3, key4sleep, key4, key4sleep, key5, key5sleep, key6, key6sleep, key7, key7sleep, key8, key8sleep, key9, key9sleep, key0, key0sleep, keyz, keyzsleep, keyr, keyrsleep
 ;{ ===================TreeView====Inner=Text==========================================;
 global R1 := TV_Add("Ustte tut." , R1)
 global R2 := TV_Add("Genel/Pot." , R2) 
@@ -226,7 +143,7 @@ global R2C2C6 := TV_Add("MP pot %30.", R2C2)
 ;~ global R2C4C1 := TV_Add("Chat 'e '/Town' yazarak town at.", R2C4)
 ;~ global R2C4C2 := TV_Add("'Gate Skill' ile town at.", R2C4)
 ;~ global R2C4C3 := TV_Add("'Mouse click' ile town at.", R2C4)
-global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisiniz.]", R2)
+global R3 := TV_Add("OTO Loot.[Kutuya yakin olmalisiniz.]", R3)
 ;~ global R2C5C1 := TV_Add("Yaprak.", R2C5)
 ;~ global R2C5C1C1 := TV_Add("Feed %70.", R2C5C1)
 ;~ global R2C5C1C2 := TV_Add("Feed %50.", R2C5C1)
@@ -269,17 +186,18 @@ global R2C5 := TV_Add("OTO Loot.[Kutuya yakin olmalisiniz.]", R2)
 ;~ global R5 := TV_Add("Archer.", R5)
 ;~ global R6 := TV_Add("Warrior.", R6)
 global R7 := TV_Add("Atak.[Zamanli skiller diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
-global R7C1 := TV_Add("Atak KEY [Z].", R7)
-global R7C2 := TV_Add("Atak > [7] > [Rr].", R7)
-global R7C3 := TV_Add("Atak > [1].", R7)
-global R7C4 := TV_Add("Atak > [2].", R7)
-global R7C5 := TV_Add("Atak > [3].", R7)
-global R7C6 := TV_Add("Atak > [4].", R7)
-global R7C7 := TV_Add("Atak > [5].", R7)
-global R7C8 := TV_Add("Atak > [6].", R7)
-global R7C9 := TV_Add("Atak KEY [9].", R7)
-global R7C10 := TV_Add("Atak KEY [0].", R7)
-;~ global R7C11 := TV_Add("Mob sec.[Devre Disi] / Mob Al butonunu kullaniniz.[Devre Disi]", R7)
+global R7C1 := TV_Add("Atak KEY > [1].", R7)
+global R7C2 := TV_Add("Atak KEY > [2].", R7)
+global R7C3 := TV_Add("Atak KEY > [3].", R7)
+global R7C4 := TV_Add("Atak KEY > [4].", R7)
+global R7C5 := TV_Add("Atak KEY > [5].", R7)
+global R7C6 := TV_Add("Atak KEY > [6].", R7)
+global R7C7 := TV_Add("Atak KEY > [7].", R7)
+global R7C8 := TV_Add("Atak KEY > [8].", R7)
+global R7C9 := TV_Add("Atak KEY > [9].", R7)
+global R7C10 := TV_Add("Atak KEY > [0].", R7)
+global R7C11 := TV_Add("Atak KEY > [Z].", R7)
+global R7C12 := TV_Add("Atak KEY > [R].", R7)
 ;~ global R7C8C1 := TV_Add("Paramun.", R7C8)
 ;~ global R7C8C1 := TV_Add("Shadow Seeker.", R7C8)
 ;~ global R7C8C1 := TV_Add("Ape.", R7C8)
@@ -292,23 +210,25 @@ global R7C10 := TV_Add("Atak KEY [0].", R7)
 ;~ global R8C6 := TV_Add("Kilic bas.", R8)
 ;~ global R8C7 := TV_Add("Frenzy bas.", R8)
 global R9 := TV_Add("Mob_Atak. [Calisiyor, stabil degil %100, deneme asamasinda...]", R9)
-global R9C1 := TV_Add("Atak KEY [Z].", R9)
-global R9C2 := TV_Add("Atak KEY [7] > [Rr].", R9)
-global R9C3 := TV_Add("Atak > [1].", R9)
-global R9C4 := TV_Add("Atak > [2].", R9)
-global R9C5 := TV_Add("Atak > [3].", R9)
-global R9C6 := TV_Add("Atak > [4].", R9)
-global R9C7 := TV_Add("Atak > [5].", R9)
-global R9C8 := TV_Add("Atak > [6].", R9)
-global R9C9 := TV_Add("Atak KEY [9].", R9)
-global R9C10 := TV_Add("Atak KEY [0].", R9)
-;~ global R9C11 := TV_Add("Mob sec. / Mob Al butonunu kullaniniz.[Devre Disi]", R9)
+global R9C1 := TV_Add("Atak KEY > [1].", R9)
+global R9C2 := TV_Add("Atak KEY > [2].", R9)
+global R9C3 := TV_Add("Atak KEY > [3].", R9)
+global R9C4 := TV_Add("Atak KEY > [4].", R9)
+global R9C5 := TV_Add("Atak KEY > [5].", R9)
+global R9C6 := TV_Add("Atak KEY > [6].", R9)
+global R9C7 := TV_Add("Atak KEY > [7].", R9)
+global R9C8 := TV_Add("Atak KEY > [8].", R9)
+global R9C9 := TV_Add("Atak KEY > [9].", R9)
+global R9C10 := TV_Add("Atak KEY > [0].", R9)
+global R9C11 := TV_Add("Atak KEY > [R].", R9)
 global R10 := TV_Add("Silah Degistir -> Kisyayol Key ile [``].", R10)
 global R10C1 := TV_Add("Silah Degistir -> 1 silah/slot [``].", R10)
 global R10C2 := TV_Add("Silah Degistir -> 2 silah/slot [``].", R10)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
+
+Gui Show, w450 h429, ROW Yardimci
 
 global str30:="|<str30>*40$34.zzzzzzzzzzzzzzzzzzzzzzzzzfzzzzk7zzzw0TTzzs0yzzzk3tzzD0DXzsM1y7z00TsDw0Tz0zU7zw1y0zzs7k7zzsT0wDzsw3VzzbkCDzzz1zzzzwDzzzzlzzzzz7zzzzyTzzzzszzzzznztzzzDw3zzyy0Dzzw00Tzzs00zzzk03zzzk07zzzs0TzU"
 global kitap:="|<kitap>*76$36.zzzDzzzzzvzzzzxvbzzzzzzTzzvxzwzzLxbzzzjuLzzzTw7xzyzw6Ezxzt80zvzs01zvzk01zrzo03zjzk03z7U007y00E07y0800Dw0200Ds00U0Tk0000TU0400z00001z00001zI0803zz0003zzs007zzzU07zzzzU7zntzs/zk73zRzU"
@@ -337,7 +257,7 @@ Loop
 {
   Gui, Submit, NoHide
   CoordMode Pixel, Window
-  WinActivate, AHK_exe RiseOnline-Win64-Shipping.exe
+  ;~ WinActivate, AHK_exe RiseOnline-Win64-Shipping.exe
   WinMove, Rise Online Client,, 0, 0, 1600, 900
   Process, Exist, RiseOnline-Win64-Shipping.exe
   if errorlevel
@@ -349,7 +269,8 @@ Loop
     AutoLoot()
     attack()
     Mobattack()
-    ;~ Zblocked_control()
+    ;~ Z_blocked_control()
+    ;~ Z_blocked_mobclick()
     ;============================
     ;~ var++
     ;~ ToolTip, %var%
@@ -385,6 +306,51 @@ Zblocked_control()
   {
     Pause
   }
+}
+
+MakeLong(LoWord, HiWord ) 
+{
+	return (HiWord << 16) | (LoWord & 0xffff)
+}
+
+Z_blocked_mobclick()
+{
+  ;~ WM_LBUTTONDOWN := 0x201
+  ;~ WM_LBUTTONUP := 0x202
+  
+  ;~ wintitle = Rise Online Client
+  CoordMode Pixel, Window
+  WinGetPos, X, Y, W, H, Rise Online Client
+  PixelSearch, x1x, y1y, X, Y, X+W, Y+H, 0x00FE00, 2, Fast  
+  if(ErrorLevel=0) ;
+  {
+    ;~ x := 80
+    ;~ y := 10
+    ;~ lParam := %x1x% | (%y1y% << 16)
+    global y2y = y1y + 15 ; +15 aranan yesil pixelin Y duzleminde altina inip moba click atmasi icin.
+    global x2x = x1x + 15 ; yukarida yazilanin X duzlemi.
+    MouseMove, %x2x%, %y2y%
+    ControlClick, x%x2x% y%y2y%, ahk_class UnrealWindow, ,, Left
+    ;~ ControlSend, ,{Click %x1x%, %y1y%}, ahk_class UnrealWindow
+    ;~ lparam := MakeLong(%x1x%, %y1y%)
+    ;~ SendMessage, 0x201, %lparam%, , ahk_class UnrealWindow ; Down
+    ;~ sleep, 500
+    ;~ SendMessage, 0x202, %lparam%, , ahk_class UnrealWindow ; UP
+    ;~ sleep, 500
+    ;~ PostMessage, 0x200, 0, %lparam%, , ahk_class UnrealWindow ; Move
+    ;~ Sleep, 100
+    ;~ PostMessage, 0x201, 0, %lparam%, , ahk_class UnrealWindow ; LButtonDown
+    ;~ Sleep, 100
+    ;~ PostMessage, 0x202, 0, %lparam%, , ahk_class UnrealWindow ; LButtonUp
+    ;~ PostMessage % WM_LBUTTONDOWN, 0, %lParam%, , ahk_class UnrealWindow
+    ;~ PostMessage % WM_LBUTTONUP, 0, %lParam%, , ahk_class UnrealWindow
+ 
+  }
+}
+
+Z_blocked_partyclick()
+{
+  
 }
 
 okubeni:
@@ -474,7 +440,7 @@ Mob_Al() ;tamam
 
 AutoLoot()
 {
-  if (tv_get(R2C5, "Check"))
+  if (tv_get(R3, "Check"))
   {
   ControlSend,,{F Down}{F Up},AHK_exe RiseOnline-Win64-Shipping.exe
   MouseGetPos, xpos, ypos 
@@ -521,7 +487,7 @@ HPpot() ;tamam
   ;~ ToolTip, %hp90_passive%  // %hp90% 
   if (tv_get(R2C1C1, "Check")) and (hp90 != hp90_passive) or (tv_get(R2C1C2, "Check")) and (hp80 != hp80_passive) or (tv_get(R2C1C3, "Check")) and (hp70 != hp70_passive) or (tv_get(R2C1C4, "Check")) and (hp50 != hp50_passive) or (tv_get(R2C1C5, "Check")) and (hp30 != hp30_passive)
   {
-    ControlSend,,{%Hk5% Down}{%Hk5% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%hppot% Down}{%hppot% Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
 }
 
@@ -537,7 +503,7 @@ MPpot() ;tamam
   PixelGetColor, mp30, 120, 113 ; ?
   if (tv_get(R2C2C1, "Check")) and (mp90 != mp90_passive) or (tv_get(R2C2C2, "Check")) and (mp80 != mp80_passive) or (tv_get(R2C2C3, "Check")) and (mp70 != mp70_passive) or (tv_get(R2C2C4, "Check")) and (mp60 != mp60_passive) or (tv_get(R2C2C5, "Check")) and (mp50 != mp50_passive) or if (tv_get(R2C2C6, "Check")) and (mp30 != mp30_passive)
   {
-    ControlSend,,{%Hk6% Down}{%Hk6% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%mppot% Down}{%mppot% Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
 }
 
@@ -558,49 +524,60 @@ Mobattack()
       ;~ SplashTextOff 
       ;~ FindText().MouseTip(ok[i].X, ok[i].Y)
     
-      if (tv_get(R9C2, "Check"))
-      {
-        ControlSend,,{%hkRr% Down}{%hkRr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hkRrsleep%
-      }
-      if (tv_get(R9C3, "Check"))
-      {
-        ControlSend,,{%hk14% Down}{%hk14% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk14sleep%
-      }
-      if (tv_get(R9C4, "Check"))
-      {
-        ControlSend,,{%hk15% Down}{%hk15% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk15sleep%
-      }
-      if (tv_get(R9C5, "Check"))
-      {
-        ControlSend,,{%hk16% Down}{%hk16% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk16sleep%
-      }
-      if (tv_get(R9C6, "Check"))
-      {
-        ControlSend,,{%hk17% Down}{%hk17% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk17sleep%
-      }
-      if (tv_get(R9C7, "Check"))
-      {
-        ControlSend,,{%hk18% Down}{%hk18% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk18sleep%    
-      }
-      if (tv_get(R9C8, "Check"))
-      {
-        ControlSend,,{%hk20% Down}{%hk20% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-        Sleep, %hk20sleep%
-      }
-      if (tv_get(R9C9, "Check"))
-      {
-        ControlSend,,{9 Down}{9 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      }
-      if (tv_get(R9C10, "Check"))
-      {
-        ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      }
+      if (tv_get(R9C1, "Check"))
+    {
+      ControlSend,,{%key1% Down}{%key1% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key1sleep%
+    } 
+	if (tv_get(R9C2, "Check"))
+    {
+      ControlSend,,{%key2% Down}{%key2% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key2slep%
+    }
+    if (tv_get(R9C3, "Check"))
+    {
+      ControlSend,,{%key3% Down}{%key3% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key3sleep%
+    }
+    if (tv_get(R9C4, "Check"))
+    {
+      ControlSend,,{%key4% Down}{%key4% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key4sleep%
+    }
+    if (tv_get(R9C5, "Check"))
+    {
+      ControlSend,,{%key5% Down}{%key5% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key5sleep%
+    }
+    if (tv_get(R9C6, "Check"))
+    {
+      ControlSend,,{%key6% Down}{%key6% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key6sleep%
+    }
+    if (tv_get(R9C7, "Check"))
+    {
+      ControlSend,,{%key7% Down}{%key7% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key7sleep%    
+    }
+    if (tv_get(R9C8, "Check"))
+    {
+      ControlSend,,{%key8% Down}{%key8% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key8sleep%
+    }
+    if (tv_get(R9C9, "Check"))
+    {
+      ControlSend,,{%key9% Down}{%key9% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key9sleep%
+    }
+    if (tv_get(R9C10, "Check"))
+    {
+      ControlSend,,{%key0% Down}{%key0% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key0sleep%
+    }
+    if (tv_get(R9C11, "Check"))
+    {
+      ControlSend,,{%keyr% Down}{%keyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %keyrsleep%
     }
     else
       {
@@ -609,57 +586,70 @@ Mobattack()
         ;~ SplashTextOff      
         ;~ Pause
       }
+    }
 }
 
 attack()
 {
     if (tv_get(R7C1, "Check"))
     {
-      ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      RandomSleep(0.5,1)
+      ControlSend,,{%key1% Down}{%key1% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key1sleep%
     } 
 	if (tv_get(R7C2, "Check"))
     {
-      ControlSend,,{%hkRr% Down}{%hkRr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hkRrsleep%
+      ControlSend,,{%key2% Down}{%key2% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key2slep%
     }
     if (tv_get(R7C3, "Check"))
     {
-      ControlSend,,{%hk14% Down}{%hk14% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk14sleep%
+      ControlSend,,{%key3% Down}{%key3% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key3sleep%
     }
     if (tv_get(R7C4, "Check"))
     {
-      ControlSend,,{%hk15% Down}{%hk15% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk15sleep%
+      ControlSend,,{%key4% Down}{%key4% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key4sleep%
     }
     if (tv_get(R7C5, "Check"))
     {
-      ControlSend,,{%hk16% Down}{%hk16% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk16sleep%
+      ControlSend,,{%key5% Down}{%key5% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key5sleep%
     }
     if (tv_get(R7C6, "Check"))
     {
-      ControlSend,,{%hk17% Down}{%hk17% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk17sleep%
+      ControlSend,,{%key6% Down}{%key6% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key6sleep%
     }
     if (tv_get(R7C7, "Check"))
     {
-      ControlSend,,{%hk18% Down}{%hk18% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk18sleep%    
+      ControlSend,,{%key7% Down}{%key7% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key7sleep%    
     }
     if (tv_get(R7C8, "Check"))
     {
-      ControlSend,,{%hk20% Down}{%hk20% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %hk20sleep%
+      ControlSend,,{%key8% Down}{%key8% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key8sleep%
     }
     if (tv_get(R7C9, "Check"))
     {
-      ControlSend,,{9 Down}{9 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      ControlSend,,{%key9% Down}{%key9% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key9sleep%
     }
     if (tv_get(R7C10, "Check"))
     {
-      ControlSend,,{0 Down}{0 Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      ControlSend,,{%key0% Down}{%key0% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %key0sleep%
+    }
+    if (tv_get(R7C11, "Check"))
+    {
+      ControlSend,,{%keyz% Down}{%keyz% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %keyzsleep%
+    }
+    if (tv_get(R7C12, "Check"))
+    {
+      ControlSend,,{%keyr% Down}{%keyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+      Sleep, %keyrsleep%
     }
 }
 
