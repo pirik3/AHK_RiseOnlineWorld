@@ -22,11 +22,31 @@
 ;   1.6] Mob atak duzenlendi, aun icin calisiyor fakat %100 stabil degil.
 ;        GUI calismasi yapildi. Gelisme oldukca eklenecektir.
 ;        Z block icin, mob click hazir fakat stabil degil. (bkz. Z_blocked_mobclick(), Z_blocked_partyclick())
+;        Guncel version denetlemesi eklendi.
 ;
 ;===========================================
 ;*/
 
 ;=========================================================================================
+
+;============Update=Check========
+SendMode, Input 
+SetWorkingDir %A_ScriptDir% ;set to script directory to see files
+
+url = https://codeload.github.com/pirik3/AHK_RiseOnlineWorld/zip/refs/heads/main
+Filename = AHK_RiseOnlineWorld-main.zip
+
+FileReadLine, VNum, %A_WorkingDir%\version.txt, 1 ;looks for local version text and stores as vnum
+	if ErrorLevel = 1
+	Vnum = 0
+whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+whr.Open("GET", "https://raw.githubusercontent.com/pirik3/AHK_RiseOnlineWorld/main/version.txt", true)
+whr.Send()
+; Using 'true' above and the call below allows the script to remain responsive.
+whr.WaitForResponse() ;this is taken from the installer. Can also be located as an example on the urldownloadtofile page of the quick reference guide.
+version := whr.ResponseText
+MsgBox, 0, Guncelleme?, Suanki version -> %Vnum%`nGuncel version -> %version%`nGuncellemeleri Github uzerinden indirebilirisiniz.
+;================================
 
 #SingleInstance, Force
 ;~ #InstallKeybdHook
@@ -250,7 +270,6 @@ global zrenk:="|<zrenk>##0$0/0/FF0000,0/-1/F50000,1/-3/E60101"
 
 MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin.`nKullanim bilgisini okuyunuz., 3
 
-
 Pause
 
 Loop
@@ -295,6 +314,13 @@ RandomSleep(min,max)
 {
 Random, random, %min%, %max%
 Sleep, %random%
+}
+
+URLDownloadToVar(url) {
+ WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+ WebRequest.Open("GET", url)
+ WebRequest.Send()
+ Return, WebRequest.ResponseText
 }
 
 Zblocked_control()
@@ -354,7 +380,7 @@ Z_blocked_partyclick()
 }
 
 okubeni:
-  MsgBox, 32, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den yuzde'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.`n`n[5] Silah degistirmek icin ilk 2 slotu kullaniniz. Hoykey `` tusu ile.`n`n[6] Mob atak icin, once mob aliniz
+  MsgBox, 32, Kullanimi., [Tus] ESC -> Baslat/Durdur <> HOME -> Script Kapat.`n`n[1] Ekraninizin belirtilen ayarlarda olmasina dikat ediniz. Res: 1600x900 vs.`n`n[2] HP/MP pot kullanimi icin, once HP/MP fulleyiniz, daha sonra 'HP/MP renk oku' butonuna tiklayiniz. Bu islemden sonra TreeView 'den yuzde'lik secip script'i baslatabilirsiniz.`n`n[3] Atak kisminda skiller icin zaman belirleyebilirsiniz, fakat kullandiginiz her saniye diger fonksiyonlarin gecikmesine yol acacaktir (orn. HP okumasi gibi), mumkun oldugunca az saniye kullanin.`n`n[4] Oto Loot, kutuya yakin oldugunuz zaman calisir. [3] 'de belirtildigi gibi, zaman araliklari cok olursa, kutu ve pot kacirma artar.`n`n[5] Silah degistirmek icin ilk 2 slotu kullaniniz. Hotkey `` tusu ile.`n`n[6] Mob atak icin, once mob aliniz
 return
 
 
