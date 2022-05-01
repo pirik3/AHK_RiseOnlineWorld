@@ -84,7 +84,7 @@ Gui Add, Hotkey, x304 y272 w55 h21, 9
 
 Gui Tab, 2
 Gui Add, Text, x336 y32 w100 h23 +0x200, Saniye? (1sn=1000)
-Gui Add, Text, x264 y32 w67 h23 +0x200, % "  F? + KEY?"
+Gui Add, Text, x264 y32 w67 h23 +0x200, % "    KEY?"
 Gui Add, Text, x232 y56 w26 h23 +0x200, [1] > 
 Gui Add, Hotkey, vkey1 x264 y56 w67 h21, 1
 Gui Add, Edit, vkey1sleep x336 y56 w40 h21, 1000
