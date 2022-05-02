@@ -23,12 +23,14 @@
 ;        GUI calismasi yapildi. Gelisme oldukca eklenecektir.
 ;        Z block icin, mob click hazir fakat stabil degil. (bkz. Z_blocked_mobclick(), Z_blocked_partyclick())
 ;        Guncel version denetlemesi eklendi.
+;   1.7] Z block engellemesi icin mob click eklendi. Atak yapmaniz yeterli, Z block geldigi zaman islem kendiliginden baslaycak.
+;        Mob atak kismi stabilite icin duzenlendi. Treeview den secim yapilacak. Moblar ilerleyen zamanlarda eklenecek.
 ;
 ;===========================================
 ;*/
 
 ;=========================================================================================
-
+global ver = "1.7"
 ;============Update=Check========
 SendMode, Input 
 SetWorkingDir %A_ScriptDir% ;set to script directory to see files
@@ -70,7 +72,7 @@ pToken := Gdip_Startup()
 ;{=====================GUI====================================================================;
 Gui Font, s9, Segoe UI
 Gui Add, TreeView, x0 y0 w220 h422 -ReadOnly AltSubmit Checked
-Gui Add, Button, x336 y376 w110 h23 gMobAl, &Mob AL
+;~ Gui Add, Button, x336 y376 w110 h23 gMobAl, &Mob AL
 Gui Add, Button, x224 y376 w110 h23, Koordinat AL
 Gui Add, Button, x224 y400 w110 h23, &Nick AL
 Gui Add, Button, x336 y400 w110 h23 grenkal, &HP/MP renk oku
@@ -204,7 +206,7 @@ global R3 := TV_Add("OTO Loot.[Kutuya yakin olmalisiniz.]", R3)
 ;~ global R4C6 := TV_Add("Cure kullan.", R4)
 ;~ global R5 := TV_Add("Archer.", R5)
 ;~ global R6 := TV_Add("Warrior.", R6)
-global R7 := TV_Add("Atak.[Zamanli skiller diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
+global R7 := TV_Add("Atak.[Arka planda calisir. Zamanli skiller diger fonksiyonlarin kontrol sikligini azaltir. Mumkun oldugunca az saniye kullanin.]", R7)
 global R7C1 := TV_Add("Atak KEY > [1].", R7)
 global R7C2 := TV_Add("Atak KEY > [2].", R7)
 global R7C3 := TV_Add("Atak KEY > [3].", R7)
@@ -228,18 +230,22 @@ global R7C12 := TV_Add("Atak KEY > [R].", R7)
 ;~ global R8C5 := TV_Add("Yere vur, x4 skill -> hotkey ile.", R8)
 ;~ global R8C6 := TV_Add("Kilic bas.", R8)
 ;~ global R8C7 := TV_Add("Frenzy bas.", R8)
-global R9 := TV_Add("Mob_Atak. [Calisiyor, stabil degil %100, deneme asamasinda...]", R9)
-global R9C1 := TV_Add("Atak KEY > [1].", R9)
-global R9C2 := TV_Add("Atak KEY > [2].", R9)
-global R9C3 := TV_Add("Atak KEY > [3].", R9)
-global R9C4 := TV_Add("Atak KEY > [4].", R9)
-global R9C5 := TV_Add("Atak KEY > [5].", R9)
-global R9C6 := TV_Add("Atak KEY > [6].", R9)
-global R9C7 := TV_Add("Atak KEY > [7].", R9)
-global R9C8 := TV_Add("Atak KEY > [8].", R9)
-global R9C9 := TV_Add("Atak KEY > [9].", R9)
-global R9C10 := TV_Add("Atak KEY > [0].", R9)
-global R9C11 := TV_Add("Atak KEY > [R].", R9)
+global R9 := TV_Add("Mob_Atak. [Calisiyor, stabil degil %100, deneme asamasinda. Arka planda calsimaz.]", R9)
+global R90 := TV_Add("Atak KEY Seciniz.", R9)
+global R9C1 := TV_Add("Atak KEY > [1].", R90)
+global R9C2 := TV_Add("Atak KEY > [2].", R90)
+global R9C3 := TV_Add("Atak KEY > [3].", R90)
+global R9C4 := TV_Add("Atak KEY > [4].", R90)
+global R9C5 := TV_Add("Atak KEY > [5].", R90)
+global R9C6 := TV_Add("Atak KEY > [6].", R90)
+global R9C7 := TV_Add("Atak KEY > [7].", R90)
+global R9C8 := TV_Add("Atak KEY > [8].", R90)
+global R9C9 := TV_Add("Atak KEY > [9].", R90)
+global R9C10 := TV_Add("Atak KEY > [0].", R90)
+global R9C11 := TV_Add("Atak KEY > [Z].", R90)
+global R9C12 := TV_Add("Atak KEY > [R].", R90)
+global R9C13 := TV_Add("Mob Seciniz.", R9)
+global R9C13C1 := TV_Add("Ratticus.", R9C13)
 global R10 := TV_Add("Silah Degistir -> Kisyayol Key ile [``].", R10)
 global R10C1 := TV_Add("Silah Degistir -> 1 silah/slot [``].", R10)
 global R10C2 := TV_Add("Silah Degistir -> 2 silah/slot [``].", R10)
@@ -263,11 +269,17 @@ global drop4:="|<drop4>*56$22.3zzxrzzrjzzSW65un/7fCiRgmsCsMM"
 global Zblocked:="|<Zblocked>*39$37.DDznzy7rzxzz3vryzzUBVVG62ma7WONNH7l1Ahd1uba0Y61cM8"
 global z:="|<z>*35$6.Uxtvnb70U"
 global zrenk:="|<zrenk>##0$0/0/FF0000,0/-1/F50000,1/-3/E60101"
+global Zblocked:="|<Zblocked2>0xC30301@0.70$36.VU0M03VU0M03VU0M03xbbvSTbgwSnnbgwSznbgwTknxbbvyTU"
+
+;{ Moblar
+global Ratticus:="|<Ratticus>0xD50037@0.70$56.y00010000Ak088M0003A06600000n3XvtVsn7hUAMMMkAF3k3666M34Mq7lVVa0l3gn4MMNUAkD6la66CHAXlrMklVwTbc"
+
+;} End of Moblar
 
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
-MsgBox, 0, Guncelleme?, Suanki version -> %Vnum%`nGuncel version -> %version%`nGuncellemeleri Github uzerinden indirebilirisiniz.
+MsgBox, 0, Guncelleme?, Suanki version -> %ver%`nGuncel version -> %version%`nGuncellemeleri Github uzerinden indirebilirsiniz.
 MsgBox, 0, Kullanim Bilgisi!, ESC -> Start/Stop`nHOME -> Terminate Script.`n======================================`nTreeview'den kullanmak istediklerinizi secin`, ESC ile baslatin.`nKullanim bilgisini okuyunuz., 3
 
 Pause
@@ -287,7 +299,9 @@ Loop
     MPpot()
     AutoLoot()
     attack()
-    Mobattack()
+    ;~ Mobattack()
+    Mobattack2()
+    Zblocked_control2()
     ;~ Z_blocked_control()
     ;~ Z_blocked_mobclick()
     ;============================
@@ -332,6 +346,15 @@ Zblocked_control()
   {
     Pause
   }
+}
+
+Zblocked_control2()
+{
+  if (ok:=FindText(X, Y, 1220, 628, 1280, 814, 0, 0, Zblocked))
+{
+  Z_blocked_mobclick()
+}
+  
 }
 
 MakeLong(LoWord, HiWord ) 
@@ -486,16 +509,16 @@ if (ok:=FindText(X, Y, xpos, ypos, xpos+300, ypos+200, 0, 0, drop4))
   slot3y := Y+50
   ;--------------
   slot4x := X-100
-  slot4y := Y+40
+  slot4y := Y+50
   slot5x := X-100
-  slot5y := Y+60
+  slot5y := Y+50
   slot6x := X-100
-  slot6y := Y+80
+  slot6y := Y+50
   
   ControlClick, x%slot1x% y%slot1y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ControlClick, x%slot2x% y%slot2y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ControlClick, x%slot3x% y%slot3y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
-  ;~ ControlClick, x%slot4x% y%slot4y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
+  ControlClick, x%slot4x% y%slot4y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ;~ ControlClick, x%slot5x% y%slot5y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ;~ ControlClick, x%slot6x% y%slot6y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
 }
@@ -535,10 +558,10 @@ MPpot() ;tamam
 
 Mobattack()
 {
-  if (tv_get(R9C1, "Check"))
+  if (tv_get(R9C11, "Check"))
   {
-    ControlSend,,{z Down}{z Up},AHK_exe RiseOnline-Win64-Shipping.exe
-    RandomSleep(0.5,1)
+    ControlSend,,{%keyz% Down}{%keyz% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %keyzsleep%
   }
 	WinGetPos, X, Y, W, H, Rise Online Client
     CoordMode, Pixel, Window
@@ -550,7 +573,7 @@ Mobattack()
       ;~ SplashTextOff 
       ;~ FindText().MouseTip(ok[i].X, ok[i].Y)
     
-      if (tv_get(R9C1, "Check"))
+    if (tv_get(R9C1, "Check"))
     {
       ControlSend,,{%key1% Down}{%key1% Up},AHK_exe RiseOnline-Win64-Shipping.exe
       Sleep, %key1sleep%
@@ -600,7 +623,7 @@ Mobattack()
       ControlSend,,{%key0% Down}{%key0% Up},AHK_exe RiseOnline-Win64-Shipping.exe
       Sleep, %key0sleep%
     }
-    if (tv_get(R9C11, "Check"))
+    if (tv_get(R9C12, "Check"))
     {
       ControlSend,,{%keyr% Down}{%keyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
       Sleep, %keyrsleep%
@@ -614,6 +637,80 @@ Mobattack()
       }
     }
 }
+
+Mobattack2()
+{
+  CoordMode, Pixel, Window
+  if (tv_get(R9C11, "Check"))
+  {
+    ControlSend,,{%keyz% Down}{%keyz% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %keyzsleep%
+  }
+  if (tv_get(R9C13C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus))
+  {
+    Mobattack3()
+  }
+}
+
+Mobattack3()
+{
+  if (tv_get(R9C1, "Check"))
+  {
+    ControlSend,,{%key1% Down}{%key1% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key1sleep%
+  } 
+  if (tv_get(R9C2, "Check"))
+  {
+    ControlSend,,{%key2% Down}{%key2% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key2slep%
+  }
+    if (tv_get(R9C3, "Check"))
+  {
+    ControlSend,,{%key3% Down}{%key3% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key3sleep%
+  }
+  if (tv_get(R9C4, "Check"))
+  {
+    ControlSend,,{%key4% Down}{%key4% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key4sleep%
+  }
+  if (tv_get(R9C5, "Check"))
+  {
+    ControlSend,,{%key5% Down}{%key5% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key5sleep%
+  }
+  if (tv_get(R9C6, "Check"))
+  {
+    ControlSend,,{%key6% Down}{%key6% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key6sleep%
+  }
+  if (tv_get(R9C7, "Check"))
+  {
+    ControlSend,,{%key7% Down}{%key7% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key7sleep%    
+  }
+  if (tv_get(R9C8, "Check"))
+  {
+    ControlSend,,{%key8% Down}{%key8% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key8sleep%
+  }
+  if (tv_get(R9C9, "Check"))
+  {
+    ControlSend,,{%key9% Down}{%key9% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key9sleep%
+  }
+  if (tv_get(R9C10, "Check"))
+  {
+    ControlSend,,{%key0% Down}{%key0% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %key0sleep%
+  }
+  if (tv_get(R9C12, "Check"))
+  {
+    ControlSend,,{%keyr% Down}{%keyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    Sleep, %keyrsleep%
+  }
+}
+  
 
 attack()
 {
@@ -910,8 +1007,10 @@ if (tv_get(R10C2, "Check"))
 return
   
 
+
 Home::ExitApp
 Esc::Pause
+return
 GuiClose:
 ExitApp
 
