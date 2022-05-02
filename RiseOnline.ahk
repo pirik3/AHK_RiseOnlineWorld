@@ -5,8 +5,8 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.6
-;  Date    : 30/04/2022
+;  Version : 1.7
+;  Date    : 02/05/2022
 ;
 ;  Usage:  ESC -> START/Pause
 ;          HOME -> Terminate Scipt
