@@ -5,8 +5,8 @@
 ;  onlinehile.com
 ;
 ;  Author  : pirik3
-;  Version : 1.7
-;  Date    : 02/05/2022
+;  Version : 1.8
+;  Date    : 03/05/2022
 ;
 ;  Usage:  ESC -> START/Pause
 ;          HOME -> Terminate Scipt
@@ -25,12 +25,14 @@
 ;        Guncel version denetlemesi eklendi.
 ;   1.7] Z block engellemesi icin mob click eklendi. Atak yapmaniz yeterli, Z block geldigi zaman islem kendiliginden baslaycak.
 ;        Mob atak kismi stabilite icin duzenlendi. Treeview den secim yapilacak. Moblar ilerleyen zamanlarda eklenecek.
+;   1.8] Patch 1.2.0 ile gelen [Z blocked] icin calisma yapildi. Farm yaparken kullaniniz. Mob click karakterinize yer degistirtebilir.
+;        Cooldown lu skiller icin Class eklemesi yapildi, skill duzenlemeleri ilerleyen zamanlarda eklenecek.
 ;
 ;===========================================
 ;*/
 
 ;=========================================================================================
-global ver = "1.7"
+global ver = "1.8"
 ;============Update=Check========
 SendMode, Input 
 SetWorkingDir %A_ScriptDir% ;set to script directory to see files
@@ -87,7 +89,8 @@ Gui Add, Text, x232 y56 w52 h23 +0x200, MP Key >
 Gui Add, Hotkey, vmppot x288 y56 w55 h21, 2
 global hppot, mppot
 Gui Add, Text, x232 y88 w67 h23 +0x200, Sprint Key >
-Gui Add, Hotkey, x304 y88 w55 h21, 8
+Gui Add, Hotkey, vsprint x304 y88 w55 h21, 8
+global sprint
 Gui Add, Text, x232 y112 w68 h23 +0x200, Rush Key > 
 Gui Add, Hotkey, x304 y112 w55 h21, 9
 Gui Add, Text, x232 y208 w93 h23 +0x200, Adrenaline Key > 
@@ -111,7 +114,7 @@ Gui Add, Hotkey, vkey1 x264 y56 w67 h21, 1
 Gui Add, Edit, vkey1sleep x336 y56 w40 h21, 1000
 Gui Add, Text, x232 y80 w26 h23 +0x200, [2] > 
 Gui Add, Hotkey, vkey2 x264 y80 w66 h21, 2
-Gui Add, Edit, vkey2sleep x336 y80 w40 h21, 1000
+Gui Add, Edit, vkey2sleep x336 y80 w40 h21, 10
 Gui Add, Text, x232 y104 w26 h23 +0x200, [3] > 
 Gui Add, Hotkey, vkey3 x264 y104 w66 h21, 3
 Gui Add, Edit, vkey3sleep x336 y104 w40 h21, 1000
@@ -138,10 +141,10 @@ Gui Add, Hotkey, vkey0 x264 y272 w66 h21, 0
 Gui Add, Edit, vkey0sleep x336 y272 w40 h21, 1000
 Gui Add, Text, x232 y296 w26 h23 +0x200, [Z] > 
 Gui Add, Hotkey, vkeyz x264 y296 w66 h21, Z
-Gui Add, Edit, vkeyzsleep x336 y296 w40 h21, 1000
+Gui Add, Edit, vkeyzsleep x336 y296 w40 h21, 10
 Gui Add, Text, x232 y320 w26 h23 +0x200, [R] > 
 Gui Add, Hotkey, vkeyr x264 y320 w66 h21, r
-Gui Add, Edit, vkeyrsleep x336 y320 w40 h21, 1000
+Gui Add, Edit, vkeyrsleep x336 y320 w40 h21, 10
 global key1, key1sleep, key2, key2sleep, key3, key4sleep, key4, key4sleep, key5, key5sleep, key6, key6sleep, key7, key7sleep, key8, key8sleep, key9, key9sleep, key0, key0sleep, keyz, keyzsleep, keyr, keyrsleep
 ;{ ===================TreeView====Inner=Text==========================================;
 global R1 := TV_Add("Ustte tut." , R1)
@@ -246,9 +249,24 @@ global R9C11 := TV_Add("Atak KEY > [Z].", R90)
 global R9C12 := TV_Add("Atak KEY > [R].", R90)
 global R9C13 := TV_Add("Mob Seciniz.", R9)
 global R9C13C1 := TV_Add("Ratticus.", R9C13)
+global R9C13C2 := TV_Add("Giant Rat.", R9C13)
 global R10 := TV_Add("Silah Degistir -> Kisyayol Key ile [``].", R10)
 global R10C1 := TV_Add("Silah Degistir -> 1 silah/slot [``].", R10)
 global R10C2 := TV_Add("Silah Degistir -> 2 silah/slot [``].", R10)
+
+global R11 := TV_Add("Rogue Skilleri [Cooldown'lu].", R11)
+global R11C1 := TV_Add("Sprint.", R11)
+
+global R12 := TV_Add("Priest Skilleri [Cooldown'lu].", R12)
+global R12C1 := TV_Add("Sprint.", R12)
+
+global R13 := TV_Add("Warrior Skilleri [Cooldown'lu].", R13)
+global R13C1 := TV_Add("Sprint.", R13)
+
+global R14 := TV_Add("Mage Skilleri [Cooldown'lu].", R14)
+global R14C1 := TV_Add("Sprint.", R14)
+
+global R15 := TV_Add("Z blocked[Mob Click].", R15)
 
 ;}=======================TreeView==Inner=Text====================================;
 ;}==================END=of=GUI==================================================
@@ -270,9 +288,16 @@ global Zblocked:="|<Zblocked>*39$37.DDznzy7rzxzz3vryzzUBVVG62ma7WONNH7l1Ahd1uba0
 global z:="|<z>*35$6.Uxtvnb70U"
 global zrenk:="|<zrenk>##0$0/0/FF0000,0/-1/F50000,1/-3/E60101"
 global Zblocked:="|<Zblocked2>0xC30301@0.70$36.VU0M03VU0M03VU0M03xbbvSTbgwSnnbgwSznbgwTknxbbvyTU"
-
+global blocked1:="|<blocked1>0xBA75FB@0.70$58.kA0A30003X0k0kA000CA3030k000szASAn7XQTjwnwrAzDnywPAvMnAngvlglj33n6nj6n6yAnAPCwPAvQrAngvzAzAnDnCzjwlsngzgtqs"
+global blocked2:="|<blocked2>0x72B2CB@0.70$58.kA0Q30003X0k0kA000CA3030k000szATQv7rwzjynzrAzTvywvQzsnDnwvlhnzb7zDnj6rCyBzwzCwvQzQrDnwvzgzhvTzCzjwlwngzwtys"
+global blocked3:="|<blocked3>0xBBCD74@0.70$51.kA003004y1U00M00rkA003006ztXkwNXkzzAzDnQzDyBaBaP6Nblglw3kzwyBaDUT7vblglgnNwQztbtyNztzzAS7XyT7w"
+global blocked4:="|<blocked4>0xE7BC63@0.70$50.wA623k0kw3110k00D0kA4A023zQT7bCyDzvDnxrDnzDrDzjbDnnhnw3tzwwTQT0yTzDCrDnxr1nzgzDrQzjzn7zvnbny"
+global Zblocked_mob:="|<Zblocked_mob>**50$79.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000U"
+global Zblocked_mob2:="|<Zblocked_mob2>0x81190F@0.90$3.zw"
 ;{ Moblar
 global Ratticus:="|<Ratticus>0xD50037@0.70$56.y00010000Ak088M0003A06600000n3XvtVsn7hUAMMMkAF3k3666M34Mq7lVVa0l3gn4MMNUAkD6la66CHAXlrMklVwTbc"
+global GiantRat:="|<GiantRat>0xE3003B@0.70$64.7l00000DU01l400080n00g00001U3406U1VkyDUAksy061XAM0q0lc6M6AFU3k36kNXsV60BVwP1aMW4M0nAFb6NW8FU36l6DtXgn30ABqC"
+global Sprint2:="|<Sprint2>0x00AAE9@0.70$25.02S000w000A00S/00T2TkDUrU3kBU1s7k0w1g0K0bwD07k3U309k/04ED02c601Q600i300L300/VU05Uk02kzTUUTzU0Dz00D000600E"
 
 ;} End of Moblar
 
@@ -304,6 +329,7 @@ Loop
     Zblocked_control2()
     ;~ Z_blocked_control()
     ;~ Z_blocked_mobclick()
+    SkillsWithCD()
     ;============================
     ;~ var++
     ;~ ToolTip, %var%
@@ -350,11 +376,16 @@ Zblocked_control()
 
 Zblocked_control2()
 {
-  if (ok:=FindText(X, Y, 1220, 628, 1280, 814, 0, 0, Zblocked))
-{
-  Z_blocked_mobclick()
-}
-  
+  if (tv_get(R15, "Check"))
+  {
+    if (ok:=FindText("wait",3, 690, 50, 744, 66,0,0, Zblocked_mob2))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
+    {
+    }
+    else
+    {
+      Z_blocked_mobclick()
+    }
+  }
 }
 
 MakeLong(LoWord, HiWord ) 
@@ -395,11 +426,6 @@ Z_blocked_mobclick()
     ;~ PostMessage % WM_LBUTTONUP, 0, %lParam%, , ahk_class UnrealWindow
  
   }
-}
-
-Z_blocked_partyclick()
-{
-  
 }
 
 okubeni:
@@ -518,7 +544,7 @@ if (ok:=FindText(X, Y, xpos, ypos, xpos+300, ypos+200, 0, 0, drop4))
   ControlClick, x%slot1x% y%slot1y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ControlClick, x%slot2x% y%slot2y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ControlClick, x%slot3x% y%slot3y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
-  ControlClick, x%slot4x% y%slot4y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
+  ;~ ControlClick, x%slot4x% y%slot4y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ;~ ControlClick, x%slot5x% y%slot5y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
   ;~ ControlClick, x%slot6x% y%slot6y%, AHK_exe RiseOnline-Win64-Shipping.exe, , Right
 }
@@ -646,9 +672,16 @@ Mobattack2()
     ControlSend,,{%keyz% Down}{%keyz% Up},AHK_exe RiseOnline-Win64-Shipping.exe
     Sleep, %keyzsleep%
   }
-  if (tv_get(R9C13C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus))
+  if (tv_get(R9, "Check"))
   {
-    Mobattack3()
+    if (tv_get(R9C13C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus)) or (tv_get(R9C13C2, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, GiantRat))
+    {
+      Mobattack3()
+    }
+    ;~ else
+    ;~ {
+      ;~ Z_blocked_mobclick()
+    ;~ }
   }
 }
 
@@ -709,6 +742,16 @@ Mobattack3()
     ControlSend,,{%keyr% Down}{%keyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
     Sleep, %keyrsleep%
   }
+}
+
+SkillsWithCD()
+{
+  
+  if (ok:=FindText("wait0", 3, 382, 29, 1266, 83, 0, 0, Sprint2)) and (tv_get(R11C1, "Check")) or (tv_get(R12C1, "Check")) or (tv_get(R13C1, "Check")) or (tv_get(R14C1, "Check"))
+  {
+    ControlSend,,{%sprint% Down}{%sprint% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+  }
+  
 }
   
 
