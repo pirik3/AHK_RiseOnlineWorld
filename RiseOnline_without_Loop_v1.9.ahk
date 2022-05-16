@@ -466,7 +466,7 @@ Gui, Submit, NoHide
 SetTimer, guiupdate, 1
 ;~ Pause
 SetTimer, UstteTut, 10
-;~ SetTimer, winonegetir, 1000
+SetTimer, winonegetir, 1000
 SetTimer, Zblocked_control2, 10
 SetTimer, AutoLoot, 10
 SetTimer, HPpot, 10
