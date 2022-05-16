@@ -395,6 +395,7 @@ global Sprint2:="|<Sprint2>0x00AAE9@0.70$25.02S000w000A00S/00T2TkDUrU3kBU1s7k0w1
 global WhiteTail:="|<WhiteTail>0xE3003B@0.70$71.VVY0U000zU13XX811000M02774E06000k00CC8y6T7U1UQAKKFaAMNU30AMhhXAMlz060MlOO48lX00A7lWQQ8FX200MMX4ssEX6600kl68UUn667k1kvAM"
 global HunterOrc:="|<HunterOrc>0xE3003B@0.80$80.kM00000001s00A600040001VU031U0010000k800kMV5kwS5U835Vzy8FaA8FU20FVX1W4EX3wE0U4EEkMV48kU40834AA68F2A81030V131XAEV30E0MMEMkMR48MD601s61s"
 global FrostWarrior:="|<FrostWarrior>0xCA0035@0.70$92.y00000676000600AU00080llU001U03000060AQM000000kSDXns374C7ba7lz76RYM0PP0lllXCT1X3C606qkAMMNVakMkntU1dcT666MNg6AA6M0CCAlVVa6P1VaFa03XXCMMMn6kMD7kk0EERa667Vc"
+global Oracle:="|<Oracle>0xE3003B@0.69$46.DU0001U1XU00060A30000M0UASC3lVu0lUAM6As360n0NzkAMTA1a30lX4k6A7C6AFUMsDUMRXtVy"
 
 ;} End of Moblar
 
@@ -424,7 +425,7 @@ global sharpeye:="|<sharpeye>0x46A807@0.70$21.7zznzzyQzzvVzzPtzzQQzv0vzE1zw0/zU1
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
 
-;~ Pause
+Pause
 
 ;~ Loop
 ;~ {
@@ -464,10 +465,8 @@ global sharpeye:="|<sharpeye>0x46A807@0.70$21.7zznzzyQzzvVzzPtzzQQzv0vzE1zw0/zU1
 #Persistent ;timerlar, her fonkiyonun, bekleme(sleep) olmaksizin birbirinden bagimsiz calismasini saglar.
 Gui, Submit, NoHide
 SetTimer, guiupdate, 1
-;~ Pause
 SetTimer, UstteTut, 10
-SetTimer, winonegetir, 1000
-SetTimer, Zblocked_control2, 10
+SetTimer, Zblocked_control2, 100
 SetTimer, AutoLoot, 10
 SetTimer, HPpot, 10
 SetTimer, MPpot, 10
@@ -498,12 +497,14 @@ SetTimer, Mobattack8, %atakkey8_sleep%
 SetTimer, Mobattack9, %atakkey9_sleep%
 SetTimer, Mobattack0, %atakkey0_sleep%
 SetTimer, Mobattackz, %atakkeyz_sleep%
+SetTimer, Mobattackz2, %atakkeyz_sleep%
 SetTimer, Mobattackr, %atakkeyr_sleep%
 SetTimer, Mobattacks, %atakkeys_sleep%
 SetTimer, Mobattackw, %atakkeyw_sleep%
 SetTimer, SkillsWithCD, 10
-SetTimer, Zmob_click_kontrol, 10
-return
+
+SetTimer, winonegetir, 1000
+
 
 guiupdate:
 {
@@ -625,6 +626,7 @@ attackr:
   if (tv_get(R7C12, "Check"))
   {
     ControlSend,,{%atakkeyr% Down}{%atakkeyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%atakkeyr% Down}{%atakkeyr% Up},AHK_exe RiseOnline-Win64-Shipping.exe
     SetTimer, attackr, %atakkeyr_sleep%
   }
 }
@@ -677,13 +679,13 @@ Zblocked_control()
 
 Zblocked_control2:
 {
-  Gui, Submit, NoHide
+  ;~ Gui, Submit, NoHide
   ;SetTimer, Zblocked_control2, 10
   ;~ Z_blocked_renkclick()
   ;~ Z_blocked_mobclick()
   if (tv_get(R15C1, "Check")) ;Mob Seciniz
   {
-    if (ok:=FindText("wait", 1,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
+    if (ok:=FindText("wait", 0,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
     {
       ToolTip, mob bulundu
     }
@@ -695,7 +697,7 @@ Zblocked_control2:
   
   if (tv_get(R15C2, "Check")) ;Renk Seciniz
   {
-    if (ok:=FindText("wait", 1,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
+    if (ok:=FindText("wait", 0,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
     {
     }
     else
@@ -1025,7 +1027,7 @@ Mobattack()
     if (tv_get(R9C1, "Check"))
     {
       ControlSend,,{%atakkey1% Down}{%atakkey1% Up},AHK_exe RiseOnline-Win64-Shipping.exe
-      Sleep, %atakkey1_sleep%
+      Sleep, %atakkey1_sleep% ;5000
     } 
 	if (tv_get(R9C2, "Check"))
     {
@@ -1122,17 +1124,18 @@ return
 
 Mobattackmobcheck:
 {
+  Gui, Submit, NoHide
   SetTimer, Mobattackmobcheck, 10
   
-  if (tv_get(R91C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus)) or (tv_get(R91C2, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, GiantRat)) or (tv_get(R91C3, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, WhiteTail)) or (tv_get(R91C4, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, HunterOrc)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior))
+  if (tv_get(R91C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus)) or (tv_get(R91C2, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, GiantRat)) or (tv_get(R91C3, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, WhiteTail)) or (tv_get(R91C4, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, HunterOrc)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior)) or (tv_get(R91C6, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Oracle))
     {
       global Varmobcheck = true
-      ;~ ToolTip, %Varmobcheck%
+      ToolTip, %Varmobcheck%
     }
     else
     {
       global Varmobcheck = false
-      ;~ ToolTip, %Varmobcheck%
+      ToolTip, %Varmobcheck%      
     }
 }
 
@@ -1239,7 +1242,17 @@ return
 Mobattackz:
 {
   SetTimer, Mobattackz, %atakkeyz_sleep%
-  if (tv_get(R9C11, "Check")) and (Varmobcheck = "1")
+  if (tv_get(R9C11, "Check")) ;or (Varmobcheck = "1")
+    {
+      ControlSend,,{%atakkey11% Down}{%atakkey11% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    }
+}
+return
+
+Mobattackz2:
+{
+  SetTimer, Mobattackz2, %atakkeyz_sleep%
+  if (tv_get(R9C11, "Check")) ;or (Varmobcheck = "0")
     {
       ControlSend,,{%atakkey11% Down}{%atakkey11% Up},AHK_exe RiseOnline-Win64-Shipping.exe
     }
