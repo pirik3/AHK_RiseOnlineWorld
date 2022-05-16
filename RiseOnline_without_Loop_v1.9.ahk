@@ -61,7 +61,7 @@ version := whr.ResponseText
 ;SetKeyDelay, 200,200
 SetWorkingDir %A_ScriptDir%
 if not A_IsAdmin
-	Run *RunAs "%A_ScriptFullPath%" ; (A_AhkPath is usually optional if the script has the .ahk extension.) You would typically check  first.
+	Run *RunAs "%A_AhkPath%" "%A_ScriptFullPath%" ; (A_AhkPath is usually optional if the script has the .ahk extension.) You would typically check  first.
 CoordMode Pixel, Window	; CoordMode, ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Window|Client]
 ;SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 t1:=A_TickCount, X:=Y:=""
@@ -312,6 +312,7 @@ global R91C2 := TV_Add("Giant Rat.", R91)
 global R91C3 := TV_Add("White Tail.", R91)
 global R91C4 := TV_Add("Hunter Orc.", R91)
 global R91C5 := TV_Add("Frost Warrior.", R91)
+global R91C6 := TV_Add("Oracle.", R91)
 
 global R10 := TV_Add("Silah Degistir -> Kisyayol Key ile [``].", R10)
 global R10C1 := TV_Add("Silah Degistir -> 1 silah/slot [``].", R10)
@@ -342,6 +343,9 @@ global R15C1 := TV_Add("Mob seciniz.", R15C0)
 global R15C1C1 := TV_Add("White Tail", R15C1)
 global R15C1C2 := TV_Add("Hunter Orc", R15C1)
 global R15C1C3 := TV_Add("Frost Warrior", R15C1)
+global R15C1C4 := TV_Add("Oracle", R15C1)
+global R15C1C5 := TV_Add("Gorgon", R15C1)
+
 global R15C2 := TV_Add("Veya Renk Seciniz", R15C0)
 global R15C2C1 := TV_Add("Yesil", R15C2)
 global R15C2C2 := TV_Add("Kirmizi", R15C2)
@@ -380,6 +384,7 @@ global blocked3:="|<blocked3>0xBBCD74@0.70$51.kA003004y1U00M00rkA003006ztXkwNXkz
 global blocked4:="|<blocked4>0xE7BC63@0.70$50.wA623k0kw3110k00D0kA4A023zQT7bCyDzvDnxrDnzDrDzjbDnnhnw3tzwwTQT0yTzDCrDnxr1nzgzDrQzjzn7zvnbny"
 global Zblocked_mob:="|<Zblocked_mob>**50$79.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000U"
 global Zblocked_mob2:="|<Zblocked_mob2>0x81190F@0.90$3.zw"
+global Mob_kontrol:="|<Mob_kontrol>*152$3.Yw"
 global Capthca_window:="|<Capthca_window>*81$68.zzzrzzzzzzzzzzTzzzzjzzwEUXEHMTkR1VtZhqqoryvP3SRPRhh1zias7aKrPPHzvngD49goq66yQsMTzzzzzzjzSzzzzzzzzzzDjzU"
 
 
@@ -397,6 +402,9 @@ global FrostWarrior:="|<FrostWarrior>0xCA0035@0.70$92.y00000676000600AU00080llU0
 global WhiteTail_click:="|<WhiteTail_click>0x00EB00@0.70$46.WC000T0C8c800E6NmU40101pHqxs4RZJ99AUEOKQYYy17dMWGH04qY0NtbUFis"
 global HunterOrc_click:="|<HunterOrc_click>0xBE080A@0.80$54.V00000DU0V00800Mk0V00800kk0zNTSxskLjV999YUkGMV999wUkGMV999UUMmMVDNgwUD2DU"
 global FrostWarrior_click:="|<FrostWarrior_click>0xFC8205@0.70$61.w000AF0000E0042MU0A080021CE0207SwvkpPjzDS4nkU+cO8gp2NiE7Rx4KOVAl834qW/BFXra00TnAwc"
+global Oracle_click:="|<Oracle_click>0xFA0000@0.69$30.S0030lU010UU010UbQxDUY7VNUYTVTl4rVMS4OzDU"
+global Gorgon_click:="|<Gorgon_click>#184@0.68$34.DU0001U0000A00000kDSyxz3baKSQCSDNtstcxbYyxXvqE00MU0001a00003k08"
+
 ;}
 
 ;{ Priest
@@ -415,8 +423,8 @@ global sharpeye:="|<sharpeye>0x46A807@0.70$21.7zznzzyQzzvVzzPtzzQQzv0vzE1zw0/zU1
 
 ;SetTitleMatchMode, 2
 ;global Target = Rise Online Client
-Gui, Submit, NoHide
-Pause
+
+;~ Pause
 
 ;~ Loop
 ;~ {
@@ -456,9 +464,10 @@ Pause
 #Persistent ;timerlar, her fonkiyonun, bekleme(sleep) olmaksizin birbirinden bagimsiz calismasini saglar.
 Gui, Submit, NoHide
 SetTimer, guiupdate, 1
+;~ Pause
 SetTimer, UstteTut, 10
 ;~ SetTimer, winonegetir, 1000
-;~ SetTimer, Zblocked_control2, 10
+SetTimer, Zblocked_control2, 10
 SetTimer, AutoLoot, 10
 SetTimer, HPpot, 10
 SetTimer, MPpot, 10
@@ -492,6 +501,8 @@ SetTimer, Mobattackz, %atakkeyz_sleep%
 SetTimer, Mobattackr, %atakkeyr_sleep%
 SetTimer, Mobattacks, %atakkeys_sleep%
 SetTimer, Mobattackw, %atakkeyw_sleep%
+SetTimer, SkillsWithCD, 10
+SetTimer, Zmob_click_kontrol, 10
 return
 
 guiupdate:
@@ -666,10 +677,15 @@ Zblocked_control()
 
 Zblocked_control2:
 {
+  Gui, Submit, NoHide
+  ;SetTimer, Zblocked_control2, 10
+  ;~ Z_blocked_renkclick()
+  ;~ Z_blocked_mobclick()
   if (tv_get(R15C1, "Check")) ;Mob Seciniz
   {
-    if (ok:=FindText("wait", 1, 690, 50, 744, 66,0,0, Zblocked_mob2))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
+    if (ok:=FindText("wait", 1,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
     {
+      ToolTip, mob bulundu
     }
     else
     {
@@ -679,7 +695,7 @@ Zblocked_control2:
   
   if (tv_get(R15C2, "Check")) ;Renk Seciniz
   {
-    if (ok:=FindText("wait", 1, 690, 50, 744, 66,0,0, Zblocked_mob2))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
+    if (ok:=FindText("wait", 1,  636, 38, 674, 72, 0, 0, Mob_kontrol))  ;or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked2)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked3)) or (ok:=FindText(Xx, Yy, 292, 73, 1148, 719, 0, 0, blocked4))
     {
     }
     else
@@ -690,17 +706,29 @@ Zblocked_control2:
 }
 return
 
+Zmob_click_kontrol:
+{
+  PixelSearch, OutputVarX, OutputVarY, 653, 58, 653, 58, 0xFAFAFB
+  if (!ErrorLevel) and (tv_get(R15C1, "Check")) ;Mob Seciniz
+  {
+    ;~ Z_blocked_mobclick()
+  }
+}
+return
+
 Z_blocked_mobclick()
 {
+  Gui, Submit, NoHide
   ;~ WM_LBUTTONDOWN := 0x201
   ;~ WM_LBUTTONUP := 0x202
   
   ;~ wintitle = Rise Online Client
   CoordMode Pixel, Window
   WinGetPos, X, Y, W, H, Rise Online Client
+  ToolTip, Z_blocked_mobclick
   ;PixelSearch, x1x, y1y, X, Y, X+W, Y+H, 0x00FE00, 2, Fast  
   ;if(ErrorLevel=0) ;
-  if (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, WhiteTail_click)) and (tv_get(R15C1C1, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, HunterOrc_click)) and (tv_get(R15C1C2, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, FrostWarrior_click)) and (tv_get(R15C1C3, "Check"))
+  if (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, WhiteTail_click)) and (tv_get(R15C1C1, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, HunterOrc_click)) and (tv_get(R15C1C2, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, FrostWarrior_click)) and (tv_get(R15C1C3, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, Oracle_click)) and (tv_get(R15C1C4, "Check")) or (ok:=FindText(x1x, y1y, X, Y, W, H, 0, 0, Gorgon_click)) and (tv_get(R15C1C5, "Check"))
   {
     ;~ x := 80
     ;~ y := 10
@@ -1095,7 +1123,8 @@ return
 Mobattackmobcheck:
 {
   SetTimer, Mobattackmobcheck, 10
-  if (tv_get(R91C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus)) or (tv_get(R91C2, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, GiantRat)) or (tv_get(R91C3, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, WhiteTail)) or (tv_get(R91C4, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, HunterOrc)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior))
+  
+  if (tv_get(R91C1, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, Ratticus)) or (tv_get(R91C2, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, GiantRat)) or (tv_get(R91C3, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, WhiteTail)) or (tv_get(R91C4, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, HunterOrc)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior)) or (tv_get(R91C5, "Check")) and (ok:=FindText(X, Y, 663, 28, 973, 58, 0, 0, FrostWarrior))
     {
       global Varmobcheck = true
       ;~ ToolTip, %Varmobcheck%
@@ -1318,12 +1347,12 @@ Mobattack3()
     }
 }
 
-SkillsWithCD()
+SkillsWithCD:
 {
   
   if (ok:=FindText("wait0", 0, 382, 29, 1266, 83, 0, 0, Sprint2)) and (tv_get(R11C1, "Check")) or (tv_get(R12C1, "Check")) or (tv_get(R13C1, "Check")) or (tv_get(R14C1, "Check"))
   {
-    ControlSend,,{%sprint% Down}{%sprint% Up},AHK_exe RiseOnline-Win64-Shipping.exe
+    ControlSend,,{%priest_sprint_key% Down}{%priest_sprint_key% Up},AHK_exe RiseOnline-Win64-Shipping.exe
   }
   
   ;{ Priest
