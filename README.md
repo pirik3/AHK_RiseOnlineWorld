@@ -28,3 +28,4 @@ Home -> Script'i Kapat.
 ![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_opt_1.JPG?raw=true)
 ![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_opt_2.JPG?raw=true)
 ![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_opt_3.JPG?raw=true)
+![alt text](https://github.com/pirik3/AHK_RiseOnlineWorld/blob/main/rise_pencere.JPG?raw=true)
